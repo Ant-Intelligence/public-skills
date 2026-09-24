@@ -1,0 +1,69 @@
+{
+  "_meta": {
+    "purpose": "Vibe Eval 学习知识库：能力薄弱域 → 配套模块 + 推荐学习资源。与评分引擎解耦，团队可直接维护本文件。",
+    "how_to_maintain": "见 learning-hub/README.md。加课程 = 往 courses[] 加一条并写清 domains；加模块 = 往 modules 加一项并建同名文件夹/index.html。",
+    "url_price_disclaimer": "价格/链接为收录时状态，可能变动；平台课程请以官网为准。"
+  },
+  "modules": {
+    "intent-and-planning":        {"title": "意图表达与前置规划", "domains": ["A1", "B1"]},
+    "context-and-boundaries":     {"title": "上下文治理与边界控制", "domains": ["A2"]},
+    "explore-and-tools":          {"title": "探索定位与工具运用", "domains": ["A3"]},
+    "debug-and-recovery":         {"title": "调试与反重试", "domains": ["A4"]},
+    "verify-and-quality":         {"title": "验证、质量与工程正确性", "domains": ["B0", "B2", "B3", "B4", "B7", "B8"]},
+    "security-and-supply-chain":  {"title": "安全、权限与供应链", "domains": ["B5", "B6"]},
+    "cost-and-efficiency":        {"title": "成本与 Token 治理", "domains": ["B9", "C3"]},
+    "collaboration-and-knowledge":{"title": "协同、规则与知识沉淀", "domains": ["C1", "C2", "C4", "C5", "C6"]}
+  },
+  "courses": [
+    {
+      "id": "cc-official-docs",
+      "title": "Claude Code 官方文档",
+      "url": "https://docs.anthropic.com/en/docs/claude-code",
+      "price": "免费",
+      "provider": "Anthropic",
+      "kind": "doc",
+      "domains": ["A1", "A2", "A3", "A4", "B3", "C1", "C2", "C3"],
+      "note": "最权威的用法参考：CLI、hooks、subagents、上下文与权限管理。"
+    },
+    {
+      "id": "cc-best-practices",
+      "title": "Claude Code 最佳实践（工程博客）",
+      "url": "https://www.anthropic.com/engineering/claude-code-best-practices",
+      "price": "免费",
+      "provider": "Anthropic",
+      "kind": "article",
+      "domains": ["A1", "A3", "B3", "C1", "C2"],
+      "note": "先探索后动手、拆任务、验证闭环、子代理编排等实操套路。"
+    },
+    {
+      "id": "anthropic-courses",
+      "title": "Anthropic Courses（开源课程合集）",
+      "url": "https://github.com/anthropics/courses",
+      "price": "免费",
+      "provider": "Anthropic",
+      "kind": "course",
+      "domains": ["A1", "B1", "B4"],
+      "note": "含 prompt engineering、real-world prompting、evaluations 等系统课程。"
+    },
+    {
+      "id": "prompt-eng-tutorial",
+      "title": "Prompt Engineering 交互式教程",
+      "url": "https://github.com/anthropics/prompt-eng-interactive-tutorial",
+      "price": "免费",
+      "provider": "Anthropic",
+      "kind": "course",
+      "domains": ["A1"],
+      "note": "从零练「把意图说清楚」，直接对应 A1 意图表达。"
+    },
+    {
+      "id": "anthropic-cookbook",
+      "title": "Anthropic Cookbook（代码示例库）",
+      "url": "https://github.com/anthropics/anthropic-cookbook",
+      "price": "免费",
+      "provider": "Anthropic",
+      "kind": "oss",
+      "domains": ["A3", "B3", "B4", "C1"],
+      "note": "工具使用、评估(evals)、agent 编排的可运行范例。"
+    }
+  ]
+}

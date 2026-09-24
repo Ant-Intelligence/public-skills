@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>意图表达与前置规划 · 把 Claude Code 用更好</title>
+<style>
+  :root{--bg:#F5F8FC;--card:#FFFFFF;--text:#0F1B2D;--text2:#5A6B82;--muted:#8695A8;
+        --brand:#2563EB;--accent:#059669;--border:#E3E9F2;--inset:#EEF3FA}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font:15px/1.75 -apple-system,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;padding:0 20px}
+  .wrap{max-width:820px;margin:0 auto;padding:48px 0 80px}
+  .kicker{font:700 12px/1 "JetBrains Mono",monospace;letter-spacing:.18em;color:var(--brand);text-transform:uppercase}
+  h1{font-size:30px;font-weight:800;margin:12px 0 6px;letter-spacing:-.01em}
+  .sub{color:var(--text2);font-size:15px;margin-bottom:8px}
+  .domains{margin:16px 0 36px}
+  .chip{display:inline-block;font:600 12px/1 "JetBrains Mono",monospace;color:var(--brand);
+        background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.2);border-radius:20px;padding:5px 11px;margin:0 6px 6px 0}
+  h2{font-size:20px;font-weight:700;margin:40px 0 12px;padding-top:20px;border-top:1px solid var(--border)}
+  h3{font-size:16px;font-weight:700;margin:24px 0 8px;color:var(--text)}
+  p{color:var(--text2);margin:10px 0}
+  ul,ol{color:var(--text2);margin:10px 0 10px 22px}
+  li{margin:6px 0}
+  strong{color:var(--text)}
+  em{color:var(--text);font-style:normal;background:rgba(37,99,235,.08);padding:0 4px;border-radius:3px}
+  .lead{font-size:16px;color:var(--text);background:rgba(37,99,235,.06);border-left:3px solid var(--brand);padding:14px 18px;border-radius:2px;margin:24px 0}
+  .bad,.good{border-radius:10px;padding:14px 16px;margin:10px 0;font-size:14px}
+  .bad{background:rgba(220,38,38,.06);border:1px solid rgba(220,38,38,.2)}
+  .good{background:rgba(5,150,105,.07);border:1px solid rgba(5,150,105,.22)}
+  .bad .tag,.good .tag{font:700 11px/1 "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:6px}
+  .bad .tag{color:#DC2626}.good .tag{color:#059669}
+  code{font-family:"JetBrains Mono",monospace;font-size:13px;background:var(--inset);border:1px solid var(--border);border-radius:5px;padding:1px 6px;color:#0F1B2D}
+  pre{background:var(--inset);border:1px solid var(--border);border-radius:10px;padding:16px 18px;overflow:auto;margin:12px 0}
+  pre code{background:none;border:none;padding:0;color:#0F1B2D;line-height:1.7}
+  .checklist{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin:24px 0}
+  .checklist li{margin:8px 0}
+  .footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+  a{color:var(--brand)}
+</style>
+</head>
+<body><div class="wrap">
+  <div class="kicker">Vibe Eval · 学习模块</div>
+  <h1>意图表达与前置规划</h1>
+  <div class="sub">把需求说清楚、把任务拆开、动手前先规划——让 Claude Code 少猜、少返工。</div>
+  <div class="domains">
+    <span class="chip">A1 意图表达与任务结构化</span>
+    <span class="chip">B1 需求澄清与前置规划</span>
+  </div>
+
+  <div class="lead">核心一句话：<strong>你把意图说多清楚，它就做多好。</strong>
+  与其丢一句模糊的话让它猜、再来回纠偏，不如前置几分钟把「要什么、不要什么、分几步」讲明白。</div>
+
+  <h2>1. 为什么这项重要</h2>
+  <p>AI coding 里最贵的浪费，不是模型不够聪明，而是<strong>需求没说清导致的反复返工</strong>：你以为它懂了，它按自己的理解写了一大片，结果方向不对，推倒重来。</p>
+
+  <h2>2. 反面 vs 正面</h2>
+  <div class="bad"><span class="tag">✗ 模糊丢活</span>
+    「帮我把这个页面优化一下。」——没说优化什么、约束是什么、改哪些文件不能动哪些，模型只能猜。</div>
+  <div class="good"><span class="tag">✓ 结构化表达</span>
+    「重构 <code>docs/report.html</code>：① 左侧加固定目录导航；② 配色从紫色换成深蓝(更严肃)；③ 每条建议加可点课程链接。<strong>不要</strong>动打分逻辑。改完起本地服务截图给我看效果。」——目标、约束、验收方式都在。</div>
+
+  <h2>3. 照抄:需求澄清骨架</h2>
+  <p>把需求讲清不需要文采,照这五个槽填一遍,意图就结构化了——直接粘进对话,按提示改:</p>
+  <pre><code># 需求澄清骨架(粘进对话,按提示填)
+目标:要做成什么?写成可验收的结果(不是"优化一下",而是"左侧加固定目录")
+约束:哪些文件 / 逻辑不能动?不能引入什么依赖?
+不要做:负向需求——往往比目标更防跑偏("不动打分逻辑"、"只动前端")
+验收:做完怎么算对了?给能跑的命令 / 可见的界面 / 通过的测试
+分步:拆成 3-6 步,每步一个可验收的小交付</code></pre>
+  <p>让 Claude Code 用 TodoWrite / TaskCreate 落地时,每步带上验收标准,模型才不会「写完就算」。下面是它写进 todo list 的样子:</p>
+  <div class="bad"><span class="tag">✗ 一句话丢活</span>
+    「优化登录页」——模型只能猜优化什么、改到哪算完。</div>
+  <div class="good"><span class="tag">✓ 带验收的步骤清单</span>
+    ① 重构导航 —— 验收:目录固定、不随页面滚动<br>
+    ② 配色 紫→深蓝 —— 验收:全站 grep 不到紫色残留<br>
+    ③ 加课程链接 —— 验收:点开能跳转<br>
+    ④ <strong>不动</strong>打分逻辑(约束)</div>
+
+  <h2>4. 四个可直接照做的动作</h2>
+
+  <h3>① 动手前先拆任务</h3>
+  <p>让 Claude Code 先用 <code>TodoWrite</code> / <code>TaskCreate</code> 把活拆成明确步骤，你过一眼再让它动手。</p>
+  <pre><code>你：先别写代码。用 TodoWrite 把这个需求拆成 3-6 个步骤，
+    每步说清「改哪个文件、验收标准」，我确认后再动手。</code></pre>
+  <p><strong>评分器数的 <code>plan_calls</code> 不止 TodoWrite——</strong><code>TaskCreate</code> / <code>TaskUpdate</code> / <code>TaskList</code> / <code>ExitPlanMode</code> 都算规划工具。建计划、随进度标完成、退出 plan mode,每一次都进 A1 / B1。</p>
+
+  <h3>② 在关键节点用 AskUserQuestion 确认边界</h3>
+  <p>岔路口让它<strong>先问你</strong>、别替你拍板。直接给它一句触发:</p>
+  <pre><code>遇到岔路口先用 AskUserQuestion 列选项问我,别替我拍板:
+① 状态库:Zustand 还是 Jotai?
+② 数据模型:字段加列,还是单独建表?
+③ 错误反馈:toast 还是 inline?
+列选项、等我选再动。</code></pre>
+
+  <h3>③ 先给「不要做什么」</h3>
+  <p>骨架里的「不要做」槽别空着,具体到文件 / 依赖 / 范围:<em>「不要改数据库 schema」「不要引新依赖」「只动前端」</em>。</p>
+
+  <h3>④ 用 Plan / 设计先行的工作流</h3>
+  <p>较大的改动，先让它产出一份简短设计(改动点 + 影响面 + 验收方式)，你批准后再实现。进 <strong>plan mode</strong> 让它只规划不动手,或调 <code>brainstorming</code> skill 先发散对齐再收敛。</p>
+
+  <h2>B1 · 动手前，把需求和计划定下来</h2>
+  <p>前面四条偏 A1——「把一句话说清楚」。B1 更进一步，是<strong>动手之前</strong>的事：比如把「优化一下登录」澄清成「加 remember-me 复选框、token 自动刷新、连续失败三次弹验证码」——每条都能单独验收，顺序一目了然。</p>
+
+  <p><strong>这动的是哪个分：</strong>拆任务 + 确认边界，直接抬你的 <strong>A1（L1 意图结构化）</strong>和 <strong>B1（L2 前置规划）</strong>——两个域的主信号都是 <code>plan_calls</code>（规划工具次数）。关键在 k 很大：A1 的 struct 子分 <code>100·n/(n+90)</code>、B1 是 <code>30 + 0.55·struct(k=40)</code>（有封顶——有规划只是入场、不等于规划质量）。<strong>开头列一次 TodoWrite 和边做边更新十几次，得分差一个量级</strong>：struct 在 n=1 时 ≈1、n=10 时 ≈10、n=90 才到 50；B1 在 n=1 时 ≈31、n=40 时 ≈58。所以要贯穿会话——建计划、每完成一步 <code>TaskUpdate</code> 标完成、关键节点重新整理——不是开头列一次就完。AskUserQuestion 确认点抬 A1 的 confirm 子分（k=180，同理要持续问）。正文可解析时 A1 还叠 30% 的 prompt_score（按平均提示长度衡量的具体度代理）；压缩转录下提示长度是死信号，这时结构化工具证据才是 A1 的全部——即便转录被截断，你拆了任务、问了边界，A1 照样有分。</p>
+
+  <div class="checklist"><strong>动手前自检清单</strong>
+    <ul>
+      <li>☐ 目标说清了吗？（要达成什么可验收的结果）</li>
+      <li>☐ 约束说清了吗？（哪些不能动、不能引入什么）</li>
+      <li>☐ 拆成明确步骤了吗？（而不是一句话丢活）</li>
+      <li>☐ 每步的验收标准说清了吗？（怎么算这步做完，对应 B1）</li>
+      <li>☐ 岔路口让它先问、而不是替我猜了吗？</li>
+      <li>☐ 大改动先要了一份计划/设计吗？</li>
+    </ul>
+  </div>
+
+  <div class="footer">Vibe Eval 学习知识库 · 模块 intent-and-planning · 对应能力域 A1 / B1 ·
+  完整判分标准见 docs/evaluation-system.md 附录 A</div>
+</div></body></html>

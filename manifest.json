@@ -1,0 +1,141 @@
+{
+ "files": [
+  {
+   "path": "skills/project-eval/.project-eval-skill",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "path": "skills/project-eval/CHANGELOG.md",
+   "sha256": "06d23fb5275ed955656c6f915f3dd0af47657b7a093da5621487b556d9956c60"
+  },
+  {
+   "path": "skills/project-eval/SKILL.md",
+   "sha256": "9d8c3e1438c2239f92146ac8e37ed6d35f9634bd7199d1b63abc96ad163b5463"
+  },
+  {
+   "path": "skills/project-eval/domain_content.py",
+   "sha256": "8e9cff913b6e5248d9cb48f7a29e6d68e6422305c20acc39d25b13e37358d79e"
+  },
+  {
+   "path": "skills/project-eval/learning.json",
+   "sha256": "7244744f0cbaf256af2e0000652a79031098910412493ca4b66645c240505266"
+  },
+  {
+   "path": "skills/project-eval/manifest.json",
+   "sha256": "5c416c8c4280694799eba2fc9c378bd8a6ce8d2eed7a42dd81934c3275fa0fdd"
+  },
+  {
+   "path": "skills/project-eval/rulers/design.json",
+   "sha256": "473e41b762a7e2046dfb54b2d868b3fc4724554e3282d1b6e5ab5e8d764da7dd"
+  },
+  {
+   "path": "skills/project-eval/rulers/general.json",
+   "sha256": "136fb4b6cda713736883fc65d0b362120ae0e8fbf76c122455935389a3abe29b"
+  },
+  {
+   "path": "skills/project-eval/rulers/prd.json",
+   "sha256": "177513b2d757aeab16a71bc70f1abe836704eda490655b25afc0a31f2f077b86"
+  },
+  {
+   "path": "skills/project-eval/rulers/requirements.json",
+   "sha256": "63b5fef74d3d793f52cb36663d39157ed96f993e7f87f5e926686b92f8e8f641"
+  },
+  {
+   "path": "skills/project-eval/rulers/test.json",
+   "sha256": "2952d7abe5266e4b5dd9969e29c7be2641bd555ee14ccd7ed414bedf9ad605bf"
+  },
+  {
+   "path": "skills/project-eval/rules.json",
+   "sha256": "1a70d5eeb9685905f9f11db9b72372760ed7f0be4a46fa526d477bd7147d690a"
+  },
+  {
+   "path": "skills/project-eval/score_session.py",
+   "sha256": "87842e641c5044fbfeda0324e51f8a25d0a0a54e9662c1aaaf5223bb8449a068"
+  },
+  {
+   "path": "skills/project-eval/upload_report.py",
+   "sha256": "6e99e7fa8c24fa1c2bb45f7acf20109d90b5ea66cc5d99337290a2cfb3757082"
+  },
+  {
+   "path": "skills/vibe-eval/README.md",
+   "sha256": "4780e8e347f3cd2ac4dc11d12d5c96e9c69ea88a6b322bf39ee5aae341773018"
+  },
+  {
+   "path": "skills/vibe-eval/SKILL.md",
+   "sha256": "24a0535b84f4b7527e2b8859cb1b20628ea03f5a57199a1073f30944b3375b5e"
+  },
+  {
+   "path": "skills/vibe-eval/domain_content.py",
+   "sha256": "8e9cff913b6e5248d9cb48f7a29e6d68e6422305c20acc39d25b13e37358d79e"
+  },
+  {
+   "path": "skills/vibe-eval/learning-hub/README.md",
+   "sha256": "861a9ea2231b9708b88a03edb6a69a23954d6c8586f5981feadee0c5910fe42c"
+  },
+  {
+   "path": "skills/vibe-eval/learning-hub/collaboration-and-knowledge/index.html",
+   "sha256": "7215904daf1ab06fc49cf57558399f67fdb4d4f2fad8c948cc1017fb26881227"
+  },
+  {
+   "path": "skills/vibe-eval/learning-hub/context-and-boundaries/index.html",
+   "sha256": "ca4959e8ed8fd272a5d1dfeb7265aaa9c7334894811d5fc40e920f27d7697bfe"
+  },
+  {
+   "path": "skills/vibe-eval/learning-hub/cost-and-efficiency/index.html",
+   "sha256": "f4cb348540823503e38f848f64397c700100df2cc6a44850d5f99ed736aa1e48"
+  },
+  {
+   "path": "skills/vibe-eval/learning-hub/courses.json",
+   "sha256": "c1a6818cacfbead9aa92a6da3b33216f4baa64371ee06046c81617a495ec67ff"
+  },
+  {
+   "path": "skills/vibe-eval/learning-hub/debug-and-recovery/index.html",
+   "sha256": "fa9519179400cbf88d0dbf6f5550ce4a22470f5c92e94917bd9a678b0addda2a"
+  },
+  {
+   "path": "skills/vibe-eval/learning-hub/explore-and-tools/index.html",
+   "sha256": "fc67b265f569398bc722ccb4d6489d01d1a0cca99bbd509b94302105921fb5a5"
+  },
+  {
+   "path": "skills/vibe-eval/learning-hub/intent-and-planning/index.html",
+   "sha256": "32373f28259138ae4c1a1b2b771400d46e0e54cee6e26b0626a20fdcb4b0235b"
+  },
+  {
+   "path": "skills/vibe-eval/learning-hub/security-and-supply-chain/index.html",
+   "sha256": "c2ec93dd7bc56944b87a7a44cf8e318647ce21e71f1da93b30ba8dcc96e06d0e"
+  },
+  {
+   "path": "skills/vibe-eval/learning-hub/verify-and-quality/index.html",
+   "sha256": "981745d9eea6cc64672a630983420854fb99be42b4cc472672ed6245a9a1c358"
+  },
+  {
+   "path": "skills/vibe-eval/rulers/design.json",
+   "sha256": "473e41b762a7e2046dfb54b2d868b3fc4724554e3282d1b6e5ab5e8d764da7dd"
+  },
+  {
+   "path": "skills/vibe-eval/rulers/general.json",
+   "sha256": "136fb4b6cda713736883fc65d0b362120ae0e8fbf76c122455935389a3abe29b"
+  },
+  {
+   "path": "skills/vibe-eval/rulers/prd.json",
+   "sha256": "177513b2d757aeab16a71bc70f1abe836704eda490655b25afc0a31f2f077b86"
+  },
+  {
+   "path": "skills/vibe-eval/rulers/requirements.json",
+   "sha256": "63b5fef74d3d793f52cb36663d39157ed96f993e7f87f5e926686b92f8e8f641"
+  },
+  {
+   "path": "skills/vibe-eval/rulers/test.json",
+   "sha256": "2952d7abe5266e4b5dd9969e29c7be2641bd555ee14ccd7ed414bedf9ad605bf"
+  },
+  {
+   "path": "skills/vibe-eval/score_session.py",
+   "sha256": "87842e641c5044fbfeda0324e51f8a25d0a0a54e9662c1aaaf5223bb8449a068"
+  },
+  {
+   "path": "skills/vibe-eval/upload_report.py",
+   "sha256": "6e99e7fa8c24fa1c2bb45f7acf20109d90b5ea66cc5d99337290a2cfb3757082"
+  }
+ ],
+ "release_version": "0.4.0"
+}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>成本与 Token 治理 · 把 Claude Code 用更好</title>
+<style>
+  :root{--bg:#F5F8FC;--card:#FFFFFF;--text:#0F1B2D;--text2:#5A6B82;--muted:#8695A8;
+        --brand:#2563EB;--accent:#059669;--border:#E3E9F2;--inset:#EEF3FA}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font:15px/1.75 -apple-system,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;padding:0 20px}
+  .wrap{max-width:820px;margin:0 auto;padding:48px 0 80px}
+  .kicker{font:700 12px/1 "JetBrains Mono",monospace;letter-spacing:.18em;color:var(--brand);text-transform:uppercase}
+  h1{font-size:30px;font-weight:800;margin:12px 0 6px;letter-spacing:-.01em}
+  .sub{color:var(--text2);font-size:15px;margin-bottom:8px}
+  .domains{margin:16px 0 36px}
+  .chip{display:inline-block;font:600 12px/1 "JetBrains Mono",monospace;color:var(--brand);
+        background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.2);border-radius:20px;padding:5px 11px;margin:0 6px 6px 0}
+  h2{font-size:20px;font-weight:700;margin:40px 0 12px;padding-top:20px;border-top:1px solid var(--border)}
+  h3{font-size:16px;font-weight:700;margin:24px 0 8px;color:var(--text)}
+  p{color:var(--text2);margin:10px 0}
+  ul,ol{color:var(--text2);margin:10px 0 10px 22px}
+  li{margin:6px 0}
+  strong{color:var(--text)}
+  em{color:var(--text);font-style:normal;background:rgba(37,99,235,.08);padding:0 4px;border-radius:3px}
+  .lead{font-size:16px;color:var(--text);background:rgba(37,99,235,.06);border-left:3px solid var(--brand);padding:14px 18px;border-radius:2px;margin:24px 0}
+  .bad,.good{border-radius:10px;padding:14px 16px;margin:10px 0;font-size:14px}
+  .bad{background:rgba(220,38,38,.06);border:1px solid rgba(220,38,38,.2)}
+  .good{background:rgba(5,150,105,.07);border:1px solid rgba(5,150,105,.22)}
+  .bad .tag,.good .tag{font:700 11px/1 "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:6px}
+  .bad .tag{color:#DC2626}.good .tag{color:#059669}
+  code{font-family:"JetBrains Mono",monospace;font-size:13px;background:var(--inset);border:1px solid var(--border);border-radius:5px;padding:1px 6px;color:#0F1B2D}
+  pre{background:var(--inset);border:1px solid var(--border);border-radius:10px;padding:16px 18px;overflow:auto;margin:12px 0}
+  pre code{background:none;border:none;padding:0;color:#0F1B2D;line-height:1.7}
+  .checklist{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin:24px 0}
+  .checklist li{margin:8px 0}
+  .footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+  a{color:var(--brand)}
+</style>
+</head>
+<body><div class="wrap">
+  <div class="kicker">Vibe Eval · 学习模块</div>
+  <h1>成本与 Token 治理</h1>
+  <div class="sub">同样的活花更少的 token——养缓存、按难度分流模型、精炼上下文。对应 B9 / C3 两个域。</div>
+  <div class="domains"><span class="chip">B9 资源效率</span><span class="chip">C3 Token ROI 与成本治理</span></div>
+
+  <div class="lead">核心一句话：<strong>省 token 不是抠门，是让反馈更快、让好钢用在刀刃上。</strong>
+  同一件事，会治理的人花的成本可以差一个量级——而这套评分的 C3 域，奖励的恰恰就是这几件事。</div>
+
+  <h2>两个真实杠杆：养缓存、分流模型</h2>
+  <p>企业普遍设了 token 上限，冗长空转、反复倒大文件、什么活都用最强模型，都是真金白银地烧。更隐蔽的是：token 烋越多，每轮反馈越慢，你自己等得也累。成本治理好，省钱只是一半，另一半是反馈变快。</p>
+  <p>能撬动成本的，主要是两件 Claude Code 特有的事：<em>养缓存</em>（让前缀稳定命中、不反复重读）和<em>按难度分流模型</em>（轻活用快模型、硬骨头才上强模型）。下面分别给可抄的做法。</p>
+
+  <div class="bad"><span class="tag">✗ 大而无当</span>
+  把 <code>docs/</code> 或 <code>src/</code> 整目录 <code>@</code> 进上下文、或把单个几百行的文件全文反复贴进 prompt，缓存全失效；改个错别字也默认最强模型烧着。</div>
+  <div class="good"><span class="tag">✓ 精炼 + 分流</span>
+  只给相关片段、同上下文推进养缓存；轻活（改格式、写样板）切快模型，硬骨头才上强模型；长会话及时 <code>/compact</code>。</div>
+
+  <h2>养缓存：让前缀稳定命中（C3 / B9）</h2>
+  <p>Claude Code 有 prompt 缓存：上下文前缀稳定，后续回合就能命中缓存、不必重读，token 和延迟一起降。想让命中率高，记住一条——<em>前缀别动</em>。</p>
+  <ul>
+    <li><strong>同一条任务主线持续推进</strong>，CLAUDE.md / 系统提示不要中途反复改，前缀稳定才能命中。</li>
+    <li><strong>别每轮重贴大文件</strong>：同一个文件读一次、后续引用即可，反复整篇倒进去等于反复把缓存清零重读。</li>
+    <li><strong>换任务才 <code>/clear</code></strong>：清空历史（缓存归零）；同任务只是历史太长失焦，用 <code>/compact</code>——它把长对话压缩成摘要保留"软前缀"，比 <code>/clear</code> 省。</li>
+  </ul>
+  <pre><code># /clear vs /compact —— 别用混
+换任务了、旧上下文是包袱      → /clear   （清空，缓存归零）
+同任务但历史太长、开始失焦    → /compact （压缩保留，软续接，更省）
+每轮都 /clear = 反复把养好的缓存清零重读，最费 token</code></pre>
+  <p>评分上看，这直接动两块：缓存命中率是内部 D1 的主轴（<code>0.6·cache + 0.4·output</code>），而 D1 又喂进 C3；C3 里"是否压缩"那一项，<code>/compact</code> 过就得满分、从没压过只有 40。所以——<strong>养缓存 + 及时 /compact，每一件都直接抬你的 C3</strong>。</p>
+
+  <h2>按难度分流模型（C3）</h2>
+  <p>这是省 token 最直接的杠杆，也是 Claude Code 特有的：不必什么活都用最强模型。轻活（改格式、写样板、批量重命名）用快模型，复杂推理、架构决策才上强模型。</p>
+  <p>三种分流手段，从粗到细：</p>
+  <ul>
+    <li><strong>会话中途 <code>/model</code></strong>：交互式切换，不丢上下文。重活切 Opus，琐碎读写切 Haiku。</li>
+    <li><strong>给子代理定档</strong>：在 agent 文件的 frontmatter 写 <code>model:</code>，让"这个角色"固定用一个档。比如 Claude Code 自带的 agent 里 <code>architect</code> / <code>planner</code> 写 <code>model: opus</code>（要深思），<code>tdd-guide</code> / <code>code-reviewer</code> 写 <code>model: sonnet</code>（执行类）。</li>
+    <li><strong>按任务挑不同档的子代理</strong>：轻活派给配 <code>model: haiku</code> 的执行型 agent，硬骨头派给配 <code>model: opus</code> 的深思型 agent——同一任务里按子任务难度选不同档，而不是从头到尾一个模型。</li>
+  </ul>
+  <p>给一个机械重构 agent 定快档的最小写法：</p>
+  <pre><code>---
+name: refactor-helper
+description: 机械重构 / 改格式 / 批量重命名
+model: haiku          # 琐碎活用快模型，省 token
+tools: [Read, Edit, Grep]
+---</code></pre>
+  <p>反直觉但重要：<strong>C3 的"模型分流经济性"那一项，用了 ≥2 档模型拿满 90 分</strong>，只用一档强模型（全 opus/sonnet）只有 45、只用一档弱模型（haiku）也只有 55。评分明确鼓励你按难度分流——不是越省越好，是花得合理。</p>
+
+  <h2>精炼上下文、大请求拆增量（B9）</h2>
+  <p>除了缓存和分流，还有一条朴素但有效：别倒整库。读大文件用 <code>Read</code> 的 <code>offset/limit</code> 只取相关段，而不是 <code>@</code> 整个文件；先用 <code>Grep</code> 缩范围、再定向读命中的几行；别把 <code>docs/</code> 或 <code>src/</code> 整目录塞进上下文——只挂当前任务真正需要的。B9 量的就是计费 token / 回合（每个 assistant 回合烧多少），同样的产出花更少 token、B9 就高。</p>
+
+  <div class="checklist"><strong>成本自检</strong>
+    <ul>
+      <li>☐ 是不是在无谓地每轮重贴大文件？（动手：<code>grep</code> 一下 <code>~/.claude/projects/&lt;hash&gt;/*.jsonl</code>，看同一文件内容是否在多条 user 消息里整段重复）</li>
+      <li>☐ 同任务长会话，该 <code>/compact</code> 了吗？（别等到失焦才动）</li>
+      <li>☐ 轻活有没有切快模型？（动手：<code>/model</code> 或给执行类 agent 写 <code>model: haiku/sonnet</code>）</li>
+      <li>☐ 用了 ≥2 档模型吗？（C3 经济性项：只用一档强模型只有 45 分；单档弱模型 55；≥2 档才 90）</li>
+      <li>☐ 单个 prompt 是不是一次要求改 &gt;5 个不相关文件？（动手：拆成多个子代理并行，或 <code>/clear</code> 换主线后分批推进）</li>
+    </ul>
+  </div>
+
+  <div class="footer">Vibe Eval 学习知识库 · 模块 cost-and-efficiency · 对应能力域 B9 资源效率 / C3 Token ROI 与成本治理 ·
+  完整判分标准见 docs/evaluation-system.md 附录 A</div>
+</div></body></html>

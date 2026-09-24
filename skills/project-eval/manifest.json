@@ -1,0 +1,74 @@
+{
+ "built_at": "unpinned",
+ "engine_version": "0.1.0",
+ "files": [
+  {
+   "bytes": 0,
+   "path": ".project-eval-skill",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "bytes": 56884,
+   "path": "CHANGELOG.md",
+   "sha256": "06d23fb5275ed955656c6f915f3dd0af47657b7a093da5621487b556d9956c60"
+  },
+  {
+   "bytes": 13779,
+   "path": "SKILL.md",
+   "sha256": "9d8c3e1438c2239f92146ac8e37ed6d35f9634bd7199d1b63abc96ad163b5463"
+  },
+  {
+   "bytes": 6853,
+   "path": "domain_content.py",
+   "sha256": "8e9cff913b6e5248d9cb48f7a29e6d68e6422305c20acc39d25b13e37358d79e"
+  },
+  {
+   "bytes": 23533,
+   "path": "learning.json",
+   "sha256": "7244744f0cbaf256af2e0000652a79031098910412493ca4b66645c240505266"
+  },
+  {
+   "bytes": 2013,
+   "path": "rulers/design.json",
+   "sha256": "473e41b762a7e2046dfb54b2d868b3fc4724554e3282d1b6e5ab5e8d764da7dd"
+  },
+  {
+   "bytes": 1028,
+   "path": "rulers/general.json",
+   "sha256": "136fb4b6cda713736883fc65d0b362120ae0e8fbf76c122455935389a3abe29b"
+  },
+  {
+   "bytes": 959,
+   "path": "rulers/prd.json",
+   "sha256": "177513b2d757aeab16a71bc70f1abe836704eda490655b25afc0a31f2f077b86"
+  },
+  {
+   "bytes": 2249,
+   "path": "rulers/requirements.json",
+   "sha256": "63b5fef74d3d793f52cb36663d39157ed96f993e7f87f5e926686b92f8e8f641"
+  },
+  {
+   "bytes": 1642,
+   "path": "rulers/test.json",
+   "sha256": "2952d7abe5266e4b5dd9969e29c7be2641bd555ee14ccd7ed414bedf9ad605bf"
+  },
+  {
+   "bytes": 270373,
+   "path": "rules.json",
+   "sha256": "1a70d5eeb9685905f9f11db9b72372760ed7f0be4a46fa526d477bd7147d690a"
+  },
+  {
+   "bytes": 1112503,
+   "path": "score_session.py",
+   "sha256": "87842e641c5044fbfeda0324e51f8a25d0a0a54e9662c1aaaf5223bb8449a068"
+  },
+  {
+   "bytes": 10960,
+   "path": "upload_report.py",
+   "sha256": "6e99e7fa8c24fa1c2bb45f7acf20109d90b5ea66cc5d99337290a2cfb3757082"
+  }
+ ],
+ "manifest_sha256": "f92d734d60d2662cab7458e05f758446bf01d363dfa651c8140a3f60e71297aa",
+ "release_version": "0.4.0",
+ "rules_version": "0.2.12"
+}

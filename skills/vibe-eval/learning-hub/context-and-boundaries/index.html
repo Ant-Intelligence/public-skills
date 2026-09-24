@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>上下文治理与边界控制 · 把 Claude Code 用更好</title>
+<style>
+  :root{--bg:#F5F8FC;--card:#FFFFFF;--text:#0F1B2D;--text2:#5A6B82;--muted:#8695A8;
+        --brand:#2563EB;--accent:#059669;--border:#E3E9F2;--inset:#EEF3FA}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font:15px/1.75 -apple-system,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;padding:0 20px}
+  .wrap{max-width:820px;margin:0 auto;padding:48px 0 80px}
+  .kicker{font:700 12px/1 "JetBrains Mono",monospace;letter-spacing:.18em;color:var(--brand);text-transform:uppercase}
+  h1{font-size:30px;font-weight:800;margin:12px 0 6px;letter-spacing:-.01em}
+  .sub{color:var(--text2);font-size:15px;margin-bottom:8px}
+  .domains{margin:16px 0 36px}
+  .chip{display:inline-block;font:600 12px/1 "JetBrains Mono",monospace;color:var(--brand);
+        background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.2);border-radius:20px;padding:5px 11px;margin:0 6px 6px 0}
+  h2{font-size:20px;font-weight:700;margin:40px 0 12px;padding-top:20px;border-top:1px solid var(--border)}
+  h3{font-size:16px;font-weight:700;margin:24px 0 8px;color:var(--text)}
+  p{color:var(--text2);margin:10px 0}
+  ul,ol{color:var(--text2);margin:10px 0 10px 22px}
+  li{margin:6px 0}
+  strong{color:var(--text)}
+  em{color:var(--text);font-style:normal;background:rgba(37,99,235,.08);padding:0 4px;border-radius:3px}
+  .lead{font-size:16px;color:var(--text);background:rgba(37,99,235,.06);border-left:3px solid var(--brand);padding:14px 18px;border-radius:2px;margin:24px 0}
+  .bad,.good{border-radius:10px;padding:14px 16px;margin:10px 0;font-size:14px}
+  .bad{background:rgba(220,38,38,.06);border:1px solid rgba(220,38,38,.2)}
+  .good{background:rgba(5,150,105,.07);border:1px solid rgba(5,150,105,.22)}
+  .bad .tag,.good .tag{font:700 11px/1 "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:6px}
+  .bad .tag{color:#DC2626}.good .tag{color:#059669}
+  code{font-family:"JetBrains Mono",monospace;font-size:13px;background:var(--inset);border:1px solid var(--border);border-radius:5px;padding:1px 6px;color:#0F1B2D}
+  pre{background:var(--inset);border:1px solid var(--border);border-radius:10px;padding:16px 18px;overflow:auto;margin:12px 0}
+  pre code{background:none;border:none;padding:0;color:#0F1B2D;line-height:1.7}
+  .checklist{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin:24px 0}
+  .checklist li{margin:8px 0}
+  .footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+  a{color:var(--brand)}
+</style>
+</head>
+<body><div class="wrap">
+  <div class="kicker">Vibe Eval · 学习模块</div>
+  <h1>上下文治理与边界控制</h1>
+  <div class="sub">管好长会话的工作记忆、在关键处叫停确认、把约定沉淀成文件——对应 A2 / C2 两个域。</div>
+  <div class="domains">
+    <span class="chip">A2 边界与会话控制</span>
+    <span class="chip">C2 规则沉淀与自动化约束</span>
+  </div>
+
+  <div class="lead">核心一句话：<strong>上下文是模型的工作记忆，越干净越准。</strong>
+  换任务切会话、长会话压摘要、稳定约定沉淀进 <code>CLAUDE.md</code>——三件套把工作记忆守住，比事后纠偏省得多。</div>
+
+  <h2>1. 为什么这项重要</h2>
+  <p>长会话里早期的探索、废弃方案、无关输出全堆在工作记忆里，挤占模型注意力——它开始引用过时信息、答非所问（上下文腐烂）。最隐蔽的是<em>会话边界不清</em>：上一个任务的假设被带进下一个任务，模型按过时约束改文件，不像报错那样显眼，但每轮都让它多猜几次。<code>/clear</code>、<code>/compact</code>、<code>CLAUDE.md</code> 是 Claude Code 特有的三道闸——别等烂了再修。</p>
+
+  <h2>2. 反面 vs 正面</h2>
+  <div class="bad"><span class="tag">✗ 一条会话干到底</span>
+    同一个会话先修 bug、又加功能、再改文档，历史越滚越长，模型忘掉最初约束、把无关文件也改了。换任务不 <code>/clear</code>，旧假设串味；反复解释的约定从不沉淀进 <code>CLAUDE.md</code>。</div>
+  <div class="good"><span class="tag">✓ 分段治理</span>
+    换任务前 <code>/clear</code> 重开干净上下文；长任务中途 <code>/compact</code> 压成摘要续接；项目规范写进 <code>CLAUDE.md</code>，Claude Code 每次启动自动读到，不必重复解释。</div>
+
+  <h2>3. /clear 还是 /compact：一张决策表</h2>
+  <p>这两个常被混用，但作用完全不同——<code>/clear</code> 清空上下文、缓存归零；<code>/compact</code> 把历史压成摘要、保留软前缀续接。从<strong>会话边界</strong>角度挑：</p>
+  <pre><code># 上下文治理决策表（从会话边界 / gov 角度挑）
+换任务 / 切到不相关功能    → /clear    # 旧假设不串味，重开干净工作记忆
+同任务、历史已长、模型忘早期约束 → /compact  # 压摘要续接，保留软前缀
+关键节点 / 即将动敏感文件  → AskUserQuestion 问我 / hook 拦 Write   # 先停下来给确认，别一口气跑
+每轮都 /clear              → 反例      # 反复清零最费 token，缓存维度见成本模块</code></pre>
+  <p>token 与 <code>cache_hit_rate</code> 的取舍见<strong>成本模块</strong>，这里只讲会话边界维度：换任务必清、同任务失焦才压。</p>
+  <p><strong>这动的是哪个分：</strong><code>/compact</code> 与会话边界直接抬你的 <strong>A2（L1 边界与会话控制）</strong>。公式 <code>a2 = 0.5·gov + 0.5·fill_part</code>——gov 检测到压缩就从 25 跳到 80（非满分，证明确治了上下文），没治理动作只有 25，一次 /compact 净增约 <strong>27.5 分</strong>（0.5·(80−25)）。评分器不字面解析 <code>/compact</code> 斜杠命令，看的是 <code>prompts_not_measurable</code> 代理——内容规则提示数 &lt; 50%·last-prompt 标记数即判压缩（<code>COMPACTED_PROMPT_RATIO=0.50</code>）。fill_part 那半看填充率可不可测：可测取 <code>fill_score = fill_rate/0.60·100</code>（满分线 60% 填充），不可测默认 35（不白给）。A2 天花板 90（压缩 + fill 满分）；fill 不可测基线 30（无压缩 + fill 不可测）；fill 可测且填充率极低时理论下限 12.5（无压缩 + fill_rate≈0）。<code>fill_rate</code> 是评分器内部量、对话里看不到——跑 <code>python mvp/score_session.py PATH.jsonl</code>，报告 A2 证据卡打出填充率，会话超 120 分钟且 fill_rate &lt; 40% 时自动标「Context Rot」。压缩同时经 C3 压缩项 <code>0.15·(100−40)</code> 抬 +9——会话治理主战场是 A2，C3 附带收益。A2 ∈ L1、层权重 0.25。</p>
+
+  <h2>4. 设确认点，在跑偏前叫停</h2>
+  <p>长会话最大的风险不是慢，是<em>跑偏太远才发现</em>。在指令里明确边界，让它停在你能检查的节点：</p>
+  <pre><code># 触发话术（粘进对话）
+「先只改 docs/report.html 这一个文件，改完停下来给我看 diff，不要继续改别的。」
+「这一步做完先停，我确认后再进行下一步。」
+「遇到岔路先用 AskUserQuestion 列选项问我，别替我拍板。」</code></pre>
+  <p>岔路口用 <code>AskUserQuestion</code> 让它先问、别替拍板（抬 A1，见意图模块）；动敏感文件前必停，把不可逆动作拦在执行前。<strong>bypassPermissions</strong> 即便开了也只是教练模式：仅信息、0 扣分、0 闸门，但风险实打实，确认点更不能省。</p>
+
+  <h2>5. 把约定沉淀进 CLAUDE.md</h2>
+  <p>项目规范、常用路径、禁改项写进 <code>CLAUDE.md</code>，Claude Code 每次启动自动读到。跨工具协同（Codex / Cursor）读 <code>AGENTS.md</code>——口径同 <code>CLAUDE.md</code>，直接 <code>cp CLAUDE.md AGENTS.md</code> 或软链即可。下面是可直接粘用的骨架，按项目改：</p>
+  <pre><code># CLAUDE.md（放项目根，粘改即用）
+
+## 项目概述
+一句话说清这是什么、技术栈、当前阶段。
+
+## 常用命令
+- 跑测试：python -m unittest discover -s mvp/tests
+- 单会话打分：python mvp/score_session.py PATH.jsonl
+- 批量画像：python mvp/score_session.py --batch
+
+## 禁改项（负向约束，比正向更能防跑偏）
+- 不动 mvp/score_session.py 的评分公式常量（改前先问我）
+- 不引第三方依赖（本项目零依赖）
+- 不改 .env / .git/config / .claude/settings.json 的密钥位
+
+## 交流约定
+- 回复一律中文
+- 提交按关注点切分，不要 git add -A
+
+## 路径速查
+- 打分器：mvp/score_session.py
+- 测试：mvp/tests/
+- 文档：docs/</code></pre>
+  <p><strong>这动的是哪个分：</strong>写进 <code>CLAUDE.md</code> 直接抬你的 <strong>C2（L3 规则沉淀与自动化约束）</strong>。C2 量的是规则文件的<strong>存在性</strong>——<code>RULE_FILE_RE</code> 认 <code>CLAUDE.md</code> / <code>AGENTS.md</code> / <code>.cursorrules</code> / <code>.windsurfrules</code> / <code>copilot-instructions.md</code> / <code>.cursor/rules</code>，从编辑过的文件里过滤出这些就算 rule_files。无 rule_files = <strong>20</strong>（不白给）；有就起步 <strong>40</strong>，公式 <code>40 + 0.50·_dim_returns(n, 8)</code>，<code>_dim_returns(n,k)=100·n/(n+k)</code>。1 个文件 ≈46、3 个 ≈54、8 个到中段 65、渐近 90（源码注释写"封顶约 75"是上游算术偏差，75 只是中段值）。编辑 hook 脚本（<code>.claude/hooks/*.py</code>）<strong>不</strong>计入 C2——正则不含 hook 路径；hook 的价值在 B5 安全拦截，不在 C2 评分。C2 ∈ L3、层权重 0.25。</p>
+
+  <h3>自动化约束：把禁改项从自觉变成机械拦截</h3>
+  <p>CLAUDE.md 里的「不动评分公式常量」靠模型自觉；配一个 PreToolUse hook，写操作前自动拦下要确认——这才是 C2「自动化约束」那半边的完整闭环。<strong>此项不计入 C2 评分</strong>（<code>RULE_FILE_RE</code> 正则只认 rule_files 存在性），但属 C2 能力域的完整工具链：评分认存在性，教学给工具链。</p>
+  <pre><code># .claude/settings.json 片段（PreToolUse hook：改评分常量前拦下要确认）
+{
+  "hooks": {
+    "PreToolUse": [{
+      "matcher": "Write|Edit",
+      "command": "python .claude/hooks/guard_score_constants.py"
+    }]
+  }
+}</code></pre>
+  <pre><code># .claude/hooks/guard_score_constants.py（最小实物，零依赖）
+import sys, json, re
+data = json.load(sys.stdin)              # PreToolUse 经 stdin 传 JSON
+fp  = data.get("tool_input", {}).get("file_path", "")
+if "score_session.py" not in fp:
+    sys.exit(0)                          # 非评分器文件，放行
+content = (data.get("tool_input", {}).get("content")
+           or data.get("tool_input", {}).get("new_string", ""))
+# 命中评分常量赋值即阻断（退出码 2 = 拦下并把反馈回灌给模型）
+if re.search(r"(GOOD_FILL_RATE|COMPACTED_PROMPT_RATIO|RULE_FILE_RE)\s*=", content):
+    sys.stderr.write("[guard] 评分常量受保护，改前先和我确认。\n")
+    sys.exit(2)
+sys.exit(0)</code></pre>
+
+  <h2>6. 长会话自检</h2>
+  <p>触发线：会话超 50 轮、或最近 5 轮工具调用密度下降、或跑打分器报出「Context Rot」标（fill_rate &lt; 40% 且会话超 120 分钟）——就该 <code>/compact</code>。前两个是肉眼替代信号（fill_rate 是内部量、对话里看不到），第三个跑 <code>python mvp/score_session.py PATH.jsonl</code> 看 A2 证据卡。</p>
+
+  <div class="checklist"><strong>逐条动手</strong>
+    <ul>
+      <li>☐ 这是不是新任务？是就先 /clear（动手：看会话首尾 user 消息主题是否一致，不一致就 /clear）</li>
+      <li>☐ 会话太长、模型开始忘早期约束？该 /compact 了（动手：<code>grep</code> 早期约束关键词，看是否还在被后续 assistant 回合引用）</li>
+      <li>☐ fill_rate 偏低 / 会话超 50 轮？压缩触发信号（动手：<code>grep -c '"type":"assistant"' ~/.claude/projects/&lt;hash&gt;/*.jsonl</code> 数回合，或跑 <code>score_session.py</code> 看 fill_rate）</li>
+      <li>☐ 关键节点有没有停下来确认？（动手：粘第 4 节话术「先只改 X 文件，改完停给我看 diff」）</li>
+      <li>☐ 反复解释的约定，是不是该写进 CLAUDE.md？（动手：<code>ls</code> 项目根有没有 CLAUDE.md，没有就建）</li>
+      <li>☐ 跨工具协同有没有 AGENTS.md？（动手：<code>ls AGENTS.md</code>，没有就 <code>cp CLAUDE.md AGENTS.md</code> 或软链）</li>
+    </ul>
+  </div>
+
+  <div class="footer">Vibe Eval 学习知识库 · 模块 context-and-boundaries · 对应能力域 A2 / C2 ·
+  完整判分标准见 docs/evaluation-system.md 附录 A</div>
+</div></body></html>

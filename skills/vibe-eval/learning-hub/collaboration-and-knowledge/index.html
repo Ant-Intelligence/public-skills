@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>协同、规则与知识沉淀 · 把 Claude Code 用更好</title>
+<style>
+  :root{--bg:#F5F8FC;--card:#FFFFFF;--text:#0F1B2D;--text2:#5A6B82;--muted:#8695A8;
+        --brand:#2563EB;--accent:#059669;--border:#E3E9F2;--inset:#EEF3FA}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font:15px/1.75 -apple-system,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;padding:0 20px}
+  .wrap{max-width:820px;margin:0 auto;padding:48px 0 80px}
+  .kicker{font:700 12px/1 "JetBrains Mono",monospace;letter-spacing:.18em;color:var(--brand);text-transform:uppercase}
+  h1{font-size:30px;font-weight:800;margin:12px 0 6px;letter-spacing:-.01em}
+  .sub{color:var(--text2);font-size:15px;margin-bottom:8px}
+  .domains{margin:16px 0 36px}
+  .chip{display:inline-block;font:600 12px/1 "JetBrains Mono",monospace;color:var(--brand);
+        background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.2);border-radius:20px;padding:5px 11px;margin:0 6px 6px 0}
+  h2{font-size:20px;font-weight:700;margin:40px 0 12px;padding-top:20px;border-top:1px solid var(--border)}
+  h3{font-size:16px;font-weight:700;margin:24px 0 8px;color:var(--text)}
+  p{color:var(--text2);margin:10px 0}
+  ul,ol{color:var(--text2);margin:10px 0 10px 22px}
+  li{margin:6px 0}
+  strong{color:var(--text)}
+  em{color:var(--text);font-style:normal;background:rgba(37,99,235,.08);padding:0 4px;border-radius:3px}
+  .lead{font-size:16px;color:var(--text);background:rgba(37,99,235,.06);border-left:3px solid var(--brand);padding:14px 18px;border-radius:2px;margin:24px 0}
+  .bad,.good{border-radius:10px;padding:14px 16px;margin:10px 0;font-size:14px}
+  .bad{background:rgba(220,38,38,.06);border:1px solid rgba(220,38,38,.2)}
+  .good{background:rgba(5,150,105,.07);border:1px solid rgba(5,150,105,.22)}
+  .bad .tag,.good .tag{font:700 11px/1 "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:6px}
+  .bad .tag{color:#DC2626}.good .tag{color:#059669}
+  code{font-family:"JetBrains Mono",monospace;font-size:13px;background:var(--inset);border:1px solid var(--border);border-radius:5px;padding:1px 6px;color:#0F1B2D}
+  pre{background:var(--inset);border:1px solid var(--border);border-radius:10px;padding:16px 18px;overflow:auto;margin:12px 0}
+  pre code{background:none;border:none;padding:0;color:#0F1B2D;line-height:1.7}
+  .checklist{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin:24px 0}
+  .checklist li{margin:8px 0}
+  .footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+  a{color:var(--brand)}
+</style>
+</head>
+<body><div class="wrap">
+  <div class="kicker">Vibe Eval · 学习模块</div>
+  <h1>协同、规则与知识沉淀</h1>
+  <div class="sub">把个人效率变成团队能力：舍得拆、把规矩落成文件、改动进 git、经验写得下、过程留得住——对应 C1 / C2 / C4 / C5 / C6 五个域。</div>
+  <div class="domains"><span class="chip">C1 多代理协同</span><span class="chip">C2 规则沉淀</span><span class="chip">C4 交付落地</span><span class="chip">C5 知识管理</span><span class="chip">C6 过程留痕</span></div>
+
+  <div class="lead">核心一句话：<strong>让别人（和三个月后的你）能接着用你今天的成果。</strong>
+  一个人用得溜是起点；能把套路沉淀成团队资产、把改动真正提交进仓库，才不会每次都从零开始。</div>
+
+  <h2>不做这层，前面省的效率全散了</h2>
+  <p>复杂任务不拆，主线程上下文迟早被细节撑爆；反复口头强调的规矩不落成文件，下次又得重讲一遍、新人又得踩一遍同样的坑；改了一堆不提交，一次 <code>git reset</code> 就等于白干；不留痕，事后想复盘什么都没有。这层不是可有可无的点缀——前面省下的效率能不能存下来全看它。</p>
+
+  <div class="bad"><span class="tag">✗ 单打独斗、不留痕</span>
+  复杂任务全堆主线程跑到上下文爆炸；规矩每次口头重申；改完不提交、不写说明，换个人完全接不上手。</div>
+  <div class="good"><span class="tag">✓ 协同 + 沉淀</span>
+  复杂任务拆给子代理或独立 worktree；规矩写进 <code>CLAUDE.md</code> / hooks；改动及时进 git；关键决策落成文档。</div>
+
+  <h2>复杂任务要舍得拆（C1）</h2>
+  <p>主线程的上下文是稀缺资源。一个又大又杂的任务不拆，全塞在一个对话里，上下文很快被各种细节撑爆，模型开始忘事、串味。把边界清晰、能并行的子任务派给子代理（Agent / Task），主线程只收结论，保持干净。</p>
+  <p>判断标准很简单：这个子任务有没有清晰的输入输出边界？有，就拆出去；和别处纠缠、需要频繁来回沟通的，留主线程。<strong>并行多任务互不污染</strong>，可以各开一个独立 worktree（<code>git worktree add</code> 或 Claude Code 的 <code>EnterWorktree</code>）——注意不少项目约定只在明确需要时才用 worktree，别滥用。</p>
+  <p>评分上，C1 量的是你有没有真做子代理编排（<code>subagent_calls + sidechain_events</code>），进 L3；零编排只拿 10 分底分——协同域"不白给分"，要真拆职责才爬得上去。</p>
+
+  <h2>反复讲的规矩，写成文件（C2）</h2>
+  <p>一条规则你跟 AI 说了三遍以上——"别动评分公式""提交信息用 conventional commits""这个目录不许改"——别再口头重复了。写进 <code>CLAUDE.md</code> / <code>AGENTS.md</code>，或做成 hook 自动卡住，一次写、次次生效。</p>
+  <p>CLAUDE.md 会在会话启动时自动从项目根（及父目录）读进上下文，不用每次手贴；<code>AGENTS.md</code> 是跨工具通用的（Claude Code / Codex / Cursor 都读），团队混用工具时放它。最小模板：</p>
+  <pre><code># 项目约定
+- 提交信息用 conventional commits（feat / fix / docs / ...）
+- 打分器 mvp/score_session.py 是单文件、仅标准库，新增能力挂到现有函数
+- 不要改评分公式/阈值（标准只在 docs/evaluation-system.md 附录 A）
+- 测试：python -m unittest discover -s mvp/tests 必须离线全绿
+
+# 常用路径
+- 打分器：mvp/score_session.py
+- 评分标准：docs/evaluation-system.md 附录 A
+- 课件：learning-hub/&lt;module&gt;/index.html</code></pre>
+  <p>口头的规矩一定会漂移，文件的不会。要更硬，就把规矩做成 hook——安全模块里的 <code>block_secrets.py</code> 拦密钥、验证模块里的 PostToolUse 自动跑测试，规矩就从"靠记性"变成"绕不过的机制"。评分上，C2 量的就是 <code>rule_files</code>（CLAUDE.md / AGENTS.md / .cursorrules 这类规则文件）存在与否，进 L3，一个都没有只有 20 分底分——注意打分器只认规则文件，hook 脚本是好实践但不计入 C2，想涨这分得写进 CLAUDE.md / AGENTS.md。</p>
+
+  <h2>改动要进 git 才算数（C4）</h2>
+  <p>"我改好了，在本地"——这不算交付。本地改动随时可能被覆盖、被重写、被一次误操作抹掉。进了版本库、提交了，才真正成为团队资产，也才能被后续的评分、校准、回溯用到。</p>
+  <p>可用的小步改动尽快提交，别攒一大坨；提交信息写清楚改了什么、为什么。评分上 C4 是产出主轴——git 可用时量的是 <code>landed_ratio</code>（真进提交的文件占比）；没 git 但转录里有 <code>git commit</code> 也能拿分（封顶 80）；既没 git 也没提交、只是碰过文件，封顶 55——<strong>评分不把"忙"当成"成"</strong>。</p>
+
+  <h2>把经验写成能被搜到的东西（C5）</h2>
+  <p>知识只在你脑子里，对团队等于不存在。一次踩坑的排查、一个模块的设计、一套环境的搭建——写成 spec、NOTES、README，放在团队能搜到的地方。写得不用漂亮，关键是有人能在你不在场时找到、看懂、照着做。</p>
+  <p>判断：这事下次还会有人问、有人做，就值得花十分钟写下来。C5 量的是 <code>doc_files</code>（有没有产出文档文件），进 L3；没写就是数据不足（None）。</p>
+
+  <h2>留下过程，事后才回得来（C6）</h2>
+  <p>只留最终代码，你丢掉的是"为什么这么决策""验证过哪些方案""踩过哪些坑"。这些在复盘、培训、排查时极其值钱——代码只告诉你<strong>是什么</strong>，过程才告诉你<strong>为什么</strong>。</p>
+  <p>计划、设计备选、验证结果、评审报告这类过程产物留下来、归好档。C6 量的是 thinking 比例、文件快照数、工具留痕——可回溯才得分，进 L3。Vibe Eval 这种评分体系本身就依赖过程留痕：没有原始 session 和报告，分数不可复核，coaching 也无从谈起。</p>
+
+  <div class="checklist"><strong>沉淀自检</strong>
+    <ul>
+      <li>☐ 复杂任务有清晰边界的部分，拆给子代理了吗？（C1）</li>
+      <li>☐ 反复讲的规矩写进 CLAUDE.md / hooks 了吗？（动手：建一个 CLAUDE.md，先写 3 条最常重复的约定）（C2）</li>
+      <li>☐ 改动提交进 git 了吗，还是堆在本地？（动手：<code>git status</code> 看有没有未提交的工作）（C4）</li>
+      <li>☐ 这次的排查/设计经验值得写下来给别人复用吗？（C5）</li>
+      <li>☐ 计划、验证、报告这些过程留痕了吗，事后回得来吗？（C6）</li>
+    </ul>
+  </div>
+
+  <div class="footer">Vibe Eval 学习知识库 · 模块 collaboration-and-knowledge · 对应能力域 C1 多代理协同 / C2 规则沉淀 / C4 交付落地 / C5 知识管理 / C6 过程留痕 ·
+  完整判分标准见 docs/evaluation-system.md 附录 A</div>
+</div></body></html>

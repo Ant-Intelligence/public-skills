@@ -1,0 +1,199 @@
+{
+  "learning_version": "2.0.0",
+  "threshold": 70,
+  "note": "项目评估报告学习中心课件(六维各一模块,v2 整页课程体:lead/编号章节/✗✓对照/可照抄代码/动作讲解/自检清单):渲染层纯文案,不参与评分;引擎只取薄弱维(score < threshold)展开,文件缺失时报告降级为薄弱维清单,绝不谎称无薄弱域。text 支持极小内联标记:**加粗** 与 `代码`,其余一律转义。",
+  "modules": {
+    "P1": {
+      "title": "说明书齐不齐:让新 AI 第一天就能干活",
+      "sub": "README 四件、AI 员工手册、口径一致、引用属实 —— 新 AI 认识一个项目,就靠这四扇门。",
+      "lead": "核心一句话:**文档不是写给人看的作文,是新 AI 的操作手册 —— 每一句都要「照着做就能成」。**",
+      "checks": ["p1_readme_essentials", "p1_ai_instr_coverage", "p1_instr_conflict", "p1_reality_check"],
+      "sections": [
+        { "type": "h2", "text": "1. 为什么这项重要" },
+        { "type": "para", "text": "AI 协作里最贵的浪费,不是模型不够聪明,而是**它靠猜**:README 没讲怎么跑,它就试错四种启动方式;指令文档没写禁区,它就把不该动的文件改了。这一维权重最高(30%),因为它是其它一切的地基 —— 文档和现实对不上,后面验证、流程做得再好也白搭。" },
+        { "type": "para", "text": "这一维四项检查正好是四扇门:**README 四件**(是什么/怎么装/怎么跑/怎么测)、**AI 指令覆盖**(结构/命令/约定/禁区)、**多份指令不打架**、**引用对盘**(文档提到的文件真实存在)。每一项都有机器判据,不是印象分。" },
+        { "type": "h2", "text": "2. 反面 vs 正面" },
+        { "type": "bad", "tag": "✗ 只有理念没有命令", "text": "README 三段讲项目愿景,没有一条能跑的命令 —— 新 AI 装不起、跑不起来,只能瞎试。" },
+        { "type": "good", "tag": "✓ 四件齐全", "text": "是什么 / 怎么装 / 怎么跑 / 怎么测,每条命令可复制、写明预期结果(`pytest -q`,应全绿)。理念散文一段就够。" },
+        { "type": "bad", "tag": "✗ 命令是转述", "text": "「运行测试」「启动开发服务」—— AI 拿到的是一句人话,不是一个能执行的命令,还是得猜。" },
+        { "type": "good", "tag": "✓ 命令是原文", "text": "命令写成可执行原文(`pnpm test`),而且 README、Makefile、CI 三处**同一句** —— 文档说的就是现实跑的。" },
+        { "type": "bad", "tag": "✗ 死链指路", "text": "文档提到 docs/setup.md,文件早删了 —— AI 点开就碰壁,然后开始怀疑整个文档都不靠谱。" },
+        { "type": "h2", "text": "3. 照抄:README 四件骨架" },
+        { "type": "para", "text": "不需要文采,照这四个槽填一遍,新 AI 第一天就能自己干活:" },
+        { "type": "code", "label": "README 骨架(照抄替换)", "text": "# 项目名\n一句话说清这是什么、解决谁的问题。\n\n## 安装\ngit clone <repo> && cd <repo>\npnpm install        # 需 Node 20(见 .nvmrc)\n\n## 运行\npnpm dev            # 启动后打开 http://localhost:3000\n\n## 测试\npnpm test           # 与 CI 跑的同一套\n\n结构详见 docs/architecture.md(目录职责与数据流)。" },
+        { "type": "h2", "text": "4. 四个可直接照做的动作" },
+        { "type": "actions", "items": [
+          { "title": "① 按四件补 README", "text": "照上面骨架补齐「装 / 跑 / 测」;**每条命令亲手跑一遍再写进去**,跑不通的命令比不写更害人。少写理念散文。" },
+          { "title": "② 给 AI 建员工手册", "text": "建 AGENTS.md(或 CLAUDE.md),写全四块:结构地图 / 常用命令 / 约定规范 / 禁区。像给新同事的交接便签,短而具体。" },
+          { "title": "③ 命令只在一处定义", "text": "命令在 Makefile(或 package scripts)定义一次,README 和 AI 指令**引用**它 —— 多处各写一份,迟早打架。", "code": "# Makefile(唯一事实源)\ntest:\n\tpytest -q\n\n# README 与 AGENTS.md 里只写:\n# 运行 `make test`(与 CI 同一套)" },
+          { "title": "④ 清一遍死链", "text": "全局搜文档里的路径引用,逐个核对在不在盘上;删掉指向已删文件的引用,挪动文件当场同步改。带日期的历史规划不必回填,但要标清日期。" }
+        ] },
+        { "type": "checklist", "title": "动手改文档前自检", "items": [
+          "README 四件全了吗(是什么 / 怎么装 / 怎么跑 / 怎么测)?",
+          "每条命令可复制、写明预期结果了吗?",
+          "AI 指令四块全了吗(结构地图 / 命令 / 约定 / 禁区)?",
+          "同一条命令在所有文档里是同一句吗?",
+          "文档提到的每个文件路径,现在都真实在盘吗?"
+        ] }
+      ]
+    },
+    "P2": {
+      "title": "验证跑得起来吗:让「没改坏」可以被证明",
+      "sub": "一条命令能跑测试、机器上推就跑 —— AI 才能自己闭环,人不用反复人工验收。",
+      "lead": "核心一句话:**「改完怎么证明没改坏」要能一句话回答 —— 一条命令,谁都能跑,机器也在跑。**",
+      "checks": ["p2_test_suite", "p2_ci_steps", "p2_verify_command"],
+      "sections": [
+        { "type": "h2", "text": "1. 为什么这项重要" },
+        { "type": "para", "text": "AI 协作里最贵的问题就是「改完怎么证明没改坏」。没有测试和 CI,AI 改完只能靠眼看,人就只能反复人工验收;有了一条能跑的验证命令,AI **自己就能闭环** —— 错了自己发现、自己修,不等你发现。这一维权重与指令同级(30%),三道门里的两道(无验证 / 无持续集成)都卡在这里。" },
+        { "type": "para", "text": "三道门动真格:**没有可运行的验证**总分被压,**没有持续集成**接手等级最高只能评到次一档 —— 因为没人帮你盯着,AI 改坏的东西会静静躺在仓库里。" },
+        { "type": "h2", "text": "2. 反面 vs 正面" },
+        { "type": "bad", "tag": "✗ 测试只在本机人肉跑", "text": "有 tests/ 目录,但没有任何文档能告诉 AI 怎么跑;换台机器就没人跑,坏了几周才发现。" },
+        { "type": "good", "tag": "✓ 三处同一句", "text": "README「测试」节、Makefile test 入口、CI steps 三处**同一句验证命令**(`pytest -q`)—— 说跑就能跑,机器上推就跑。" },
+        { "type": "bad", "tag": "✗ CI 走过场", "text": "CI 只 echo 一句「build ok」就绿 —— 看着有持续集成,实际什么都不验证,AI 改坏了照样全绿。" },
+        { "type": "h2", "text": "3. 照抄:单命令入口 + 最小 CI" },
+        { "type": "code", "label": "Makefile + GitHub Actions(照抄替换)", "text": "# Makefile\ntest:\n\tpytest -q\n\n# .github/workflows/ci.yml\nname: ci\non: [push, pull_request]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - run: pip install -e . && pip install pytest\n      - run: make test" },
+        { "type": "para", "text": "先跑通这个最小版,**再考虑**多版本矩阵、缓存、产物留存 —— 有真验证的最小 CI,远胜走 thorough 场面的空 CI。" },
+        { "type": "h2", "text": "4. 四个可直接照做的动作" },
+        { "type": "actions", "items": [
+          { "title": "① 定一条「改动后必跑」", "text": "选一条最全的验证命令(跑全部测试那條),写进 README「测试」节,并且让 AI 每次改完自己执行它。" },
+          { "title": "② 接进构建配置", "text": "把同一条命令接进 Makefile / package scripts 的 test 入口,保证文档、构建配置、CI 三处一字不差。" },
+          { "title": "③ 加最小 CI", "text": "上推自动跑测试;先跑通,再考虑多版本矩阵与缓存。CI 里必须**真装依赖、真构建、真跑测试**。" },
+          { "title": "④ 新功能先补一条测试", "text": "先写一条会失败的测试再实现 —— 测试数量随功能涨,验证网越收越紧;这比一次性补测试便宜得多。" }
+        ] },
+        { "type": "checklist", "title": "让 AI 改代码前自检", "items": [
+          "有哪一条命令能跑全部测试?README 写了吗?",
+          "这条命令在 Makefile / package scripts 里有入口吗?",
+          "CI 上推会自动跑同一套吗(不是 echo)?",
+          "测试失败时,AI 看得到的报错能定位到哪条断言吗?",
+          "新改动配了对应的新测试吗?"
+        ] }
+      ]
+    },
+    "P3": {
+      "title": "安装得起来吗:装出来和你一模一样",
+      "sub": "lockfile 锁版本、工具链钉死、环境容器化 ——「在我机器上是好的」到此为止。",
+      "lead": "核心一句话:**「照着文档装,装出来和你一模一样」是协作的底线 —— 版本不漂移,AI 才不会在错误的环境里瞎修。**",
+      "checks": ["p3_lockfile", "p3_toolchain_pin", "p3_container"],
+      "sections": [
+        { "type": "h2", "text": "1. 为什么这项重要" },
+        { "type": "para", "text": "「在我机器上是好的」类事故,头号来源就是依赖版本漂移。AI 在依赖不一致的环境里会得到**和文档不一样的报错**,然后开始瞎猜、乱装、越修越坏 —— 而且它每次重试都在烧你的 token。" },
+        { "type": "para", "text": "零第三方依赖的小项目这一维整维豁免 —— **不适用不是失分**,但要在 README 写明「无第三方依赖,装完即用」,让评估和读者都知道这是有意的。" },
+        { "type": "h2", "text": "2. 反面 vs 正面" },
+        { "type": "bad", "tag": "✗ 版本全凭运气", "text": "依赖写「装个 express」,没版本范围、没 lockfile —— 三个月后新机器装出另一套,报错没人见过。" },
+        { "type": "good", "tag": "✓ 范围 + 锁定", "text": "清单写版本范围,lockfile 锁定精确版本,任何人任何机器装出同一套;CI 里校验两者一致。" },
+        { "type": "bad", "tag": "✗ 环境靠口头交接", "text": "「先装 Node 18,再配那个变量,然后……」—— 口头交接每传一手丢一块,新 AI 按残缺步骤装必翻车。" },
+        { "type": "h2", "text": "3. 照抄:版本钉死三件套" },
+        { "type": "code", "label": "语言版本 + 锁文件(照抄替换)", "text": "# .nvmrc\n20.11.0\n\n# package.json(节选)\n\"engines\": { \"node\": \">=20.11\" }\n\n# lockfile 必须入库(确认 .gitignore 没排除它):\n#   node     -> package-lock.json / pnpm-lock.yaml\n#   python   -> requirements.txt(带 == 版本)/ uv.lock\n#   rust/go  -> Cargo.lock / go.sum" },
+        { "type": "para", "text": "依赖外部服务(数据库 / 队列 / 对象存储)就补一份 compose 文件,一条命令起全套本地环境,新 AI 不用求人。" },
+        { "type": "h2", "text": "4. 四个可直接照做的动作" },
+        { "type": "actions", "items": [
+          { "title": "① 提交 lockfile", "text": "把 lockfile 提交进仓库,并确认 .gitignore 没把它排除;CI 里加一步校验 lockfile 与清单一致。" },
+          { "title": "② 钉死语言版本", "text": ".nvmrc / .python-version / rust-toolchain 钉死版本,README 引用**同一个版本号**,两处数字对不上就改到对上。" },
+          { "title": "③ 外部服务给 compose", "text": "数据库、队列这类外部依赖写成 compose 文件,README 写明「一条命令起环境」。" },
+          { "title": "④ 零依赖也要声明", "text": "零依赖项目在 README 写明「无第三方依赖,装完即用」—— 评估豁免,读者也省一次确认。" }
+        ] },
+        { "type": "checklist", "title": "新机器装环境前自检", "items": [
+          "锁文件在仓库里,且没被 .gitignore 排除吗?",
+          "语言版本钉死了吗(.nvmrc / .python-version)?",
+          "README 写的版本和钉死的一致吗?",
+          "外部服务有一条命令起环境的方案吗?",
+          "零依赖的话,README 声明了吗?"
+        ] }
+      ]
+    },
+    "P4": {
+      "title": "安全上有没有埋雷:AI 的权限就是项目的攻击面",
+      "sub": "密钥出树、授权收最小、漏洞有处报 —— 让 AI 干活不带炸弹。",
+      "lead": "核心一句话:**AI 代理能动文件、能跑命令,它的权限配置就是项目的攻击面 —— 密钥混进仓库是不可逆事故。**",
+      "checks": ["p4_secret_files", "p4_ai_grant", "p4_security_docs"],
+      "sections": [
+        { "type": "h2", "text": "1. 为什么这项重要" },
+        { "type": "para", "text": "AI 拿到的权限比普通同事还大:它默认能读写整个工作树、能跑任意命令。授权全开等于把仓库交给一个**不看后果的实习生** —— 它可能把 .env 内容写进日志、把临时脚本提交进仓库。" },
+        { "type": "para", "text": "诚实说明:这一维机器能证明的上限是「文件名层没扫出密钥」,扫不出**不等于没有** —— 所以敏感文件名检查的满分就是 60(诚实顶档),这是尺子的诚实,不是刁难。真正的密钥卫生靠流程:假密钥运行时拼装、真密钥只进本地环境变量。" },
+        { "type": "h2", "text": "2. 反面 vs 正面" },
+        { "type": "bad", "tag": "✗ .env 直接提交", "text": "密钥进了 git 历史,永远删不干净 —— 唯一的补救是全部轮换,还要假设已经被爬虫扫走了。" },
+        { "type": "good", "tag": "✓ 模板入库、真钥出树", "text": ".env 进 .gitignore,只提交 .env.example 模板(占位符无真值);泄露过的密钥立即轮换。" },
+        { "type": "bad", "tag": "✓ 授权全开", "text": "AI 授权 permissions 一律全 allow —— 一次提示注入就可能让它跑任意命令、删任意文件。" },
+        { "type": "good", "tag": "✓ 显式白名单", "text": "一条条列出:`Bash(git status)`、`Bash(pytest -q)`;新增权限逐条审批,通配符一个不给。" },
+        { "type": "h2", "text": "3. 照抄:密钥隔离 + 最小授权" },
+        { "type": "code", "label": ".gitignore + settings.json + SECURITY.md(照抄替换)", "text": "# .gitignore\n.env\n*.pem\n\n# .claude/settings.json —— 授权收到最小\n{\n  \"permissions\": {\n    \"allow\": [\"Bash(git status)\", \"Bash(pytest -q)\"]\n  }\n}\n\n# SECURITY.md(最小件)\n发现漏洞请按 <安全邮箱 / 私人漏洞平台> 报告,勿公开 issue。" },
+        { "type": "h2", "text": "4. 四个可直接照做的动作" },
+        { "type": "actions", "items": [
+          { "title": "① 全仓搜一遍密钥", "text": "按密钥形文件名与内容模式搜一遍,移出仓库;**历史里出现过的密钥一律当作已泄露,直接轮换**,不要赌没人看到。" },
+          { "title": "② 授权改白名单", "text": "AI 授权配置改成显式白名单,不用通配符;测试跑通的最小集合就是初始白名单,后续逐条加。" },
+          { "title": "③ 补安全文档", "text": "SECURITY.md 写清报告通道,CODEOWNERS 标明每块代码谁负责 —— 漏洞有处可报,改动有人认领。" },
+          { "title": "④ 假密钥运行时拼装", "text": "测试夹具 / 样例里的密钥形字面量改成运行时拼装(如 \"AKIA\" + \"…\"),既避免误报,也避免哪天假密钥被换成真的没人发现。" }
+        ] },
+        { "type": "checklist", "title": "让 AI 上岗前自检", "items": [
+          "工作树里还有密钥形文件(.env / *.pem / *key*)吗?",
+          "真密钥是不是只在本地环境变量 / 凭据管理器里?",
+          "AI 授权是显式白名单,还是一把梭全 allow?",
+          "SECURITY.md 报告通道和 CODEOWNERS 责任分区有吗?",
+          "测试里的假密钥是运行时拼装的吗?"
+        ] }
+      ]
+    },
+    "P5": {
+      "title": "AI 配套:把规矩从自觉变成机械拦截",
+      "sub": "skills 固化流程、hooks 拦住坏提交、指令不打架 —— 项目什么都不用改架构,分就是真的涨。",
+      "lead": "核心一句话:**规矩靠自觉总会漏,靠机器拦才稳定 —— 这一维是六维里可以「无中生有」挣分的一维。**",
+      "checks": ["p5_skill_structure", "p5_hook_enforcement", "p5_gear_conflict"],
+      "sections": [
+        { "type": "h2", "text": "1. 为什么这项重要" },
+        { "type": "para", "text": "文档里的规范,读一次就忘;hooks 挂在写文件、跑命令的事件点上,**每次都拦**。skills 把重复做过三遍以上的流程固化成可复用的操作手册,AI 下次直接照做。指令之间不打架,保证 AI 行为可预测 —— 两个文件说法不一致时,AI 随机听一份。" },
+        { "type": "para", "text": "这一维对存量项目最友好:**不用改架构、不用改一行业务代码**,把三样配套(skill / hook / 指令一致)补上,分就是真的涨,协作体验也是真的变好。" },
+        { "type": "h2", "text": "2. 反面 vs 正面" },
+        { "type": "bad", "tag": "✗ skill 没法被发现", "text": "SKILL.md 没有头部信息 —— 工具不知道它叫什么、什么时候用,写了等于没写。" },
+        { "type": "good", "tag": "✓ 头 + 步骤 + 验证", "text": "带 name + description 头,正文写步骤和验证提示 —— 可被发现、可照做、可验收。" },
+        { "type": "bad", "tag": "✗ 规范全靠自觉", "text": "「提交前请跑测试」写在文档里 —— 看不看随缘,AI 赶时间就跳过,坏提交照样进门。" },
+        { "type": "h2", "text": "3. 照抄:skill 最小件 + 验证 hook" },
+        { "type": "code", "label": "SKILL.md + PostToolUse hook(照抄替换)", "text": "# .claude/skills/review/SKILL.md\n---\nname: review\ndescription: 按项目约定审查改动;改动超过 3 个文件时必须先跑测试\n---\n审查步骤:\n1. git diff --stat 看改动面\n2. 跑 make test,失败先修\n3. 对照 AGENTS.md 禁区块逐条检查\n\n# .claude/settings.json —— 写文件后自动验证\n\"hooks\": { \"PostToolUse\": [{ \"matcher\": \"Write\",\n  \"hooks\": [{ \"type\": \"command\", \"command\": \"ruff check\" }] }] }" },
+        { "type": "h2", "text": "4. 四个可直接照做的动作" },
+        { "type": "actions", "items": [
+          { "title": "① 把重复流程写成 skill", "text": "重复做过三遍以上的流程(审查、发布、数据修复)写成 skill:头部信息 + 步骤 + 验证提示,放进 .claude/skills/。" },
+          { "title": "② 挂 PostToolUse hook", "text": "给 Write / Edit 挂 hook 跑格式检查与测试,把「改完就验证」从叮嘱变成机械动作 —— AI 写坏立刻拦,不进下一轮。" },
+          { "title": "③ 指令互相引用", "text": "AGENTS.md 和 CLAUDE.md 互相引用而不是复制粘贴;改口径只改一处,引用处自动跟着对。" },
+          { "title": "④ 如实低分不造假", "text": "没有配套的项目如实低分即可 —— 补上指令 / skills / hooks 是真提升;为分数造假配置,评估认不出,同事认得出。" }
+        ] },
+        { "type": "checklist", "title": "补配套前自检", "items": [
+          "哪些流程重复做了三遍以上?值得写成 skill 吗?",
+          "每个 skill 都有 name + description 头吗?",
+          "Write / Edit 后有 hook 自动跑格式检查或测试吗?",
+          "各指令文件之间有没有同一命令两种说法?",
+          "skill / hooks 引用的脚本和路径都在盘上吗?"
+        ] }
+      ]
+    },
+    "P6": {
+      "title": "协作顺不顺:让下一个人接得上",
+      "sub": "变更记录能读、协作模板给定式、文档有导航 —— 跨周目的协作成本断崖式下降。",
+      "lead": "核心一句话:**项目是长跑 —— 「这次改了什么、为什么改、接下来做什么」记不记下来,决定下一个人(或下一个 AI)能不能接得上。**",
+      "checks": ["p6_collab_templates", "p6_release_notes", "p6_doc_navigation"],
+      "sections": [
+        { "type": "h2", "text": "1. 为什么这项重要" },
+        { "type": "para", "text": "没有变更记录,AI 只能翻提交考古,把 commit message 猜成需求;没有模板,issue 和 PR 想到哪写到哪,复现步骤永远缺;没有文档导航,docs/ 一堆文件不知道从哪读起。反过来,这三样齐了,**每次接手都是照图施工,不是考古挖掘**。" },
+        { "type": "para", "text": "这一维三项检查全部考「内容真实可用」而非「文件存在」:变更记录要有版本 / 日期 / 分类三要素、条目里引用的文件真实在盘;模板要给定式栏目;导航要三层指路(入口 → 深文档 → AI 指令)走得通。" },
+        { "type": "h2", "text": "2. 反面 vs 正面" },
+        { "type": "bad", "tag": "✗ 一句话变更记录", "text": "「更新了一些东西」—— 三个月后没人知道改了什么、为什么改、会不会破坏兼容,AI 也不敢碰那块代码。" },
+        { "type": "good", "tag": "✓ 三要素条目", "text": "版本号 + 日期 + 分类(Added / Fixed…),条目里引用的文件真实在盘 —— 可读、可查、可回滚。" },
+        { "type": "bad", "tag": "✗ 口头描述 issue", "text": "「登录坏了修一下」—— 没有复现步骤、没有期望行为,AI 只能猜哪个环节坏了,修完也没法证明修对了。" },
+        { "type": "h2", "text": "3. 照抄:变更记录条目格式" },
+        { "type": "code", "label": "CHANGELOG 条目 + PR 模板栏目(照抄替换)", "text": "# CHANGELOG.md\n## 1.4.0 (2026-09-07)\n\n### Added\n- 支持批量导出 CSV(#123),文档见 docs/export.md\n\n### Fixed\n- 修复空输入导致崩溃(#118)\n- 文档引用改为相对路径,移动目录不再断链(#115)\n\n### Changed\n- 测试入口统一为 make test\n\n# .github/PULL_REQUEST_TEMPLATE.md(给定式栏目)\n## 改了什么\n## 为什么改\n## 怎么验证的(贴命令与结果)" },
+        { "type": "h2", "text": "4. 四个可直接照做的动作" },
+        { "type": "actions", "items": [
+          { "title": "① 变更记录按三要素写", "text": "版本 + 日期 + 分类;条目里提到的文件保证在盘。历史条目不必回填 —— 带日期的历史如实标注,**诚实的历史好过篡改的整齐**。" },
+          { "title": "② 补协作模板", "text": ".github 下补 issue / PR 模板各一份,给定式栏目(复现步骤 / 期望 vs 实际 / 测试证据),让提交信息一上来就带验证证据。" },
+          { "title": "③ README 尾部加文档导航", "text": "列出 docs/ 主要文档及各自讲什么,新读者按图索骥;docs 之间互链,AI 指令引用入口 —— 三层指路都能走通。" },
+          { "title": "④ 引用用相对路径", "text": "文档之间的引用写成相对路径;挪动目录时全局搜引用同步改,导航网才不会一处搬家、处处断链。" }
+        ] },
+        { "type": "checklist", "title": "合并前自检", "items": [
+          "这次改动在变更记录里有条目吗(版本 / 日期 / 分类)?",
+          "条目里引用的文件都在盘上吗?",
+          "PR 描述按模板栏目写全了吗(验证证据贴了吗)?",
+          "新加的文档,入口(README)链到了吗?",
+          "挪动过的文件,引用它的文档都同步改了吗?"
+        ] }
+      ]
+    }
+  }
+}

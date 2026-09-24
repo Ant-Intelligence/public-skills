@@ -1,0 +1,34 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  smoke:
+    # 分发冒烟:skills CLI 能发现两 skill,并能 --copy 装进各 agent 的用户级目录
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: 发现断言(--list 含两 skill)
+        run: |
+          npx -y skills@1 add . --list 2>&1 | tee /tmp/list.txt
+          grep -q "vibe-eval" /tmp/list.txt
+          grep -q "project-eval" /tmp/list.txt
+      - name: 五 agent --copy 安装冒烟
+        run: npx -y skills@1 add . --skill vibe-eval --skill project-eval -a claude-code -a zcode -a trae -a opencode -a codex --copy -y
+      - name: 各 agent 用户级目录文件在位断言
+        # 路径以 skills CLI 1.5.x 文档为准;若首跑与 CLI 实际落点不符,以
+        # `npx skills list -g` 输出修正本表。
+        run: |
+          test -f "$HOME/.claude/skills/vibe-eval/SKILL.md"
+          test -f "$HOME/.claude/skills/vibe-eval/score_session.py"
+          test -f "$HOME/.claude/skills/project-eval/SKILL.md"
+          test -f "$HOME/.zcode/skills/vibe-eval/SKILL.md"
+          test -f "$HOME/.trae/skills/vibe-eval/SKILL.md"
+          test -f "$HOME/.config/opencode/skills/vibe-eval/SKILL.md"
+          test -f "$HOME/.codex/skills/vibe-eval/SKILL.md"
