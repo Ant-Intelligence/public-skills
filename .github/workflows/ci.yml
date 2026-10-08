@@ -19,16 +19,16 @@ jobs:
           npx -y skills@1 add . --list 2>&1 | tee /tmp/list.txt
           grep -q "vibe-eval" /tmp/list.txt
           grep -q "project-eval" /tmp/list.txt
-      - name: 五 agent --copy 安装冒烟
-        run: npx -y skills@1 add . --skill vibe-eval --skill project-eval -a claude-code -a zcode -a trae -a opencode -a codex --copy -y
+      - name: 五 agent --copy 用户级安装冒烟
+        run: npx -y skills@1 add . --skill vibe-eval --skill project-eval -a claude-code -a zcode -a trae -a opencode -a codex --copy -g -y
       - name: 各 agent 用户级目录文件在位断言
-        # 路径以 skills CLI 1.5.x 文档为准;若首跑与 CLI 实际落点不符,以
-        # `npx skills list -g` 输出修正本表。
+        # 落点按 skills CLI 1.5.18 五 agent 逐一 `-g` 实测(2026-10-08);
+        # opencode 与 codex 共用 ~/.agents/skills/,无各自独立目录。
         run: |
           test -f "$HOME/.claude/skills/vibe-eval/SKILL.md"
           test -f "$HOME/.claude/skills/vibe-eval/score_session.py"
           test -f "$HOME/.claude/skills/project-eval/SKILL.md"
           test -f "$HOME/.zcode/skills/vibe-eval/SKILL.md"
           test -f "$HOME/.trae/skills/vibe-eval/SKILL.md"
-          test -f "$HOME/.config/opencode/skills/vibe-eval/SKILL.md"
-          test -f "$HOME/.codex/skills/vibe-eval/SKILL.md"
+          test -f "$HOME/.agents/skills/vibe-eval/SKILL.md"
+          test -f "$HOME/.agents/skills/project-eval/SKILL.md"
