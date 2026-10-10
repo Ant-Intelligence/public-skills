@@ -6,7 +6,7 @@
   },
   {
    "path": "skills/project-eval/CHANGELOG.md",
-   "sha256": "06d23fb5275ed955656c6f915f3dd0af47657b7a093da5621487b556d9956c60"
+   "sha256": "8d7cc7918416438c41441081b458873ba49a0b1d9b2d383c0dcdd712e4600075"
   },
   {
    "path": "skills/project-eval/SKILL.md",
@@ -14,7 +14,7 @@
   },
   {
    "path": "skills/project-eval/domain_content.py",
-   "sha256": "8e9cff913b6e5248d9cb48f7a29e6d68e6422305c20acc39d25b13e37358d79e"
+   "sha256": "bec9bfb08259b05726ddbcbf2770e5124992da58f4a362053ba4e679ce3835ea"
   },
   {
    "path": "skills/project-eval/learning.json",
@@ -22,7 +22,7 @@
   },
   {
    "path": "skills/project-eval/manifest.json",
-   "sha256": "5c416c8c4280694799eba2fc9c378bd8a6ce8d2eed7a42dd81934c3275fa0fdd"
+   "sha256": "1fed625f309ab6360deaf1b8dfb5aaad784019f7a2b9a0f169f91a9b0de344fd"
   },
   {
    "path": "skills/project-eval/rulers/design.json",
@@ -50,7 +50,7 @@
   },
   {
    "path": "skills/project-eval/score_session.py",
-   "sha256": "87842e641c5044fbfeda0324e51f8a25d0a0a54e9662c1aaaf5223bb8449a068"
+   "sha256": "f69da73d9f02e1d6e5beb0154e50ae845f2f55f86a9a0d68471087be32db83e0"
   },
   {
    "path": "skills/project-eval/upload_report.py",
@@ -62,11 +62,11 @@
   },
   {
    "path": "skills/vibe-eval/SKILL.md",
-   "sha256": "24a0535b84f4b7527e2b8859cb1b20628ea03f5a57199a1073f30944b3375b5e"
+   "sha256": "7d9b00ca803e94200bc1f583984684cbeb51c8606c7990c596587d8ca09d22f3"
   },
   {
    "path": "skills/vibe-eval/domain_content.py",
-   "sha256": "8e9cff913b6e5248d9cb48f7a29e6d68e6422305c20acc39d25b13e37358d79e"
+   "sha256": "bec9bfb08259b05726ddbcbf2770e5124992da58f4a362053ba4e679ce3835ea"
   },
   {
    "path": "skills/vibe-eval/learning-hub/README.md",
@@ -130,12 +130,12 @@
   },
   {
    "path": "skills/vibe-eval/score_session.py",
-   "sha256": "87842e641c5044fbfeda0324e51f8a25d0a0a54e9662c1aaaf5223bb8449a068"
+   "sha256": "f69da73d9f02e1d6e5beb0154e50ae845f2f55f86a9a0d68471087be32db83e0"
   },
   {
    "path": "skills/vibe-eval/upload_report.py",
    "sha256": "6e99e7fa8c24fa1c2bb45f7acf20109d90b5ea66cc5d99337290a2cfb3757082"
   }
  ],
- "release_version": "0.4.0"
+ "release_version": "0.4.1"
 }

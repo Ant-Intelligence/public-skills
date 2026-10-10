@@ -144,7 +144,7 @@ TIER_CUTOFFS = [(90, "S"), (80, "A"), (70, "B"), (60, "C"), (0, "D")]
 # 会话轨评分口径版本(双轨 0.3.0 起引入;独立于 _RELEASE_VERSION)。
 # 任何影响分数的口径改动(检查项/锚点/权重/判定)都必须递增本版本并重锁
 # mvp/tests/golden_session_totals.json —— 照 project-eval rules_version 纪律。
-SCORING_RULES_VERSION = "4"
+SCORING_RULES_VERSION = "5"
 
 # -- Batch / per-developer profile (--batch) aggregation (all tunable) --
 # Significance weight g_s = min(billable_tokens_s, SIGNIFICANCE_TOKEN_CAP): caps
@@ -354,7 +354,7 @@ HARNESS_AXIS_META = {
 }
 # L4 口径版本与披露行(0.4.0;版本串原 build_harness_model 内联字面量上提)。
 HARNESS_RUBRIC_VERSION = "H-v0.1(未校准)"
-L4_RUBRIC_DISCLOSURE = (
+HARNESS_RUBRIC_DISCLOSURE = (
     f"{HARNESS_RUBRIC_VERSION},锚点是经验定值,还没拿真实样本校过;"
     "五域按 H3 30% / H2 25% / H5 20% / H4 15% / H1 10% 加权,哪个域材料不足"
     "就不计入,剩余的按剩余权重重新折算;五个域全没材料,本层不计入。")
@@ -418,7 +418,7 @@ def classify_mode(m, override=None):
     return "manual", "未检出范式 harness 调用;判为手动挡。"
 
 
-def _l4_qualification_note(m, scored, override=None):
+def _harness_qualification_note(m, scored, override=None):
     """L4 计分资格判定依据(0.4.0 终审修补):报告侧一行,披露「L4 为什么计入本卡」。
 
     与池构成句同路(spec §6):L4 可测才出这行,由渲染件放进 L4 层节
@@ -434,8 +434,8 @@ def _l4_qualification_note(m, scored, override=None):
     art_str = f"、范式工件 {len(artifacts)} 个" if artifacts else ""
     sig = f"检出范式 harness 调用:{fam_str}{art_str}"
     if override in ("manual", "auto"):
-        return f"L4 计入本卡:用户以 --mode {override} 强制指定;{sig}。"
-    return f"L4 计入本卡:工作流框架驱动({sig})。"
+        return f"L3 计入本卡:用户以 --mode {override} 强制指定;{sig}。"
+    return f"L3 计入本卡:工作流框架驱动({sig})。"
 
 
 def _is_qa_tool(name):
@@ -8546,17 +8546,19 @@ LAYER_DEFS = [
       ("B5", "安全、权限与合规控制"), ("B6", "依赖与供应链卫生"),
       ("B7", "API、数据与契约质量"), ("B8", "错误处理、日志与可观测性"),
       ("B9", "性能与资源效率"), ("B10", "CLAUDE.md/AGENTS.md 维护")]),
-    ("L3", "综合效能与组织杠杆", 0.20,
+    # 0.4.0 四层收编:自动挡五轴(H1–H5)原样收编为 L3 域;无框架信号的
+    # 会话整层不计入,总分按剩余层重归一(见 spec 2026-09-23-l4-unified-card)。
+    # 2026-10-10 层号对调:H 层由 L4 移到 L3(个人进阶能力),C 层由 L3 移到 L4
+    # (组织杠杆压轴)——两层权重都 0.20,总分逐位不变。
+    ("L3", "自主任务委托与把关", 0.20,
+     "评估敢不敢把整段工作托给工作流框架自己跑、并在关键位置把得住关；无框架信号的会话整层不计入。",
+     [("H1", "选工具配规则"), ("H2", "开工交底"), ("H3", "决策拍板"),
+      ("H4", "放手与插手"), ("H5", "交付收尾")]),
+    ("L4", "综合效能与组织杠杆", 0.20,
      "评估能否把个人效率转化为团队可复用的组织能力：协同、规则沉淀、ROI 与治理。",
      [("C1", "多智能体协同与隔离"), ("C2", "规则沉淀与自动化约束"),
       ("C3", "Token ROI 与成本治理"), ("C4", "交付质量与返工率"),
       ("C5", "组织复用与知识管理"), ("C6", "审计性与治理适配")]),
-    # 0.4.0 四层收编:自动挡五轴(H1–H5)原样收编为 L4 域;无框架信号的
-    # 会话整层不计入,总分按剩余层重归一(见 spec 2026-09-23-l4-unified-card)。
-    ("L4", "自主任务委托与把关", 0.20,
-     "评估敢不敢把整段工作托给工作流框架自己跑、并在关键位置把得住关；无框架信号的会话整层不计入。",
-     [("H1", "选工具配规则"), ("H2", "开工交底"), ("H3", "决策拍板"),
-      ("H4", "放手与插手"), ("H5", "交付收尾")]),
 ]
 DOMAIN_TITLES = {c: t for _, _, _, _, doms in LAYER_DEFS for c, t in doms}
 DOMAIN_LAYER = {c: lc for lc, _, _, _, doms in LAYER_DEFS for c, _ in doms}
@@ -8935,7 +8937,7 @@ def _capability_domains(m, s):
             "本会话未维护 CLAUDE.md/AGENTS.md 指令文件,不计入"
             "(不白给分、不惩罚没碰的会话)。")
 
-    # ---------- L3 综合效能与组织杠杆 ----------
+    # ---------- L4 综合效能与组织杠杆 ----------
     # C1 多代理协同:边际递减(K=12)。线性 60+20·sub 在 sub=2 就饱和到 100,
     # 把"用 3 次子代理"和"用 32 次编排"判成同分;改为 35 起步(单线程适合简单任务,
     # 不重罚)+ 0.65·dim_returns(sub,12),让 3↔32 次拉开(48↔82)。
@@ -9032,7 +9034,7 @@ def _capability_domains(m, s):
         f"过程留痕：thinking {m['thinking_blocks']} 块、快照 {m['snapshot_count']}、"
         f"工具调用 {m['total_tool_calls']} 次，可回溯。")
 
-    # ---------- L4 自主任务委托与把关(0.4.0 四层收编)----------
+    # ---------- L3 自主任务委托与把关(0.4.0 四层收编)----------
     # 五轴原样收编为域:轴分 → 域行(0–100,判分侧已是整数),信号行 → finding。
     # 资格闸门不变:classify_mode 未过线 → build_harness_model 各轴 None →
     # 整层数据不足、不计入;--mode 覆盖经 metrics["_mode_override"] 传入。
@@ -9205,8 +9207,8 @@ def _assemble_layers(domains, tags_by_layer, evidence_by_layer, mode_override=No
                 "code": dcode, "name": dname, "score": sc,
                 "status": _cap_status(sc), "finding": info.get("finding", ""),
             })
-        if code == "L4":
-            # 0.4.0:L4 层分 = 五域按层内权重(HARNESS_AXIS_META)加权重归一,
+        if code == "L3":
+            # 0.4.0:L3(H 层)层分 = 五域按层内权重(HARNESS_AXIS_META)加权重归一,
             # 与 build_harness_model 的总分语义逐字一致;不是算术平均。
             _scored = [dv for dv in dom_views if dv["score"] is not None]
             if _scored:
@@ -9224,7 +9226,7 @@ def _assemble_layers(domains, tags_by_layer, evidence_by_layer, mode_override=No
         # Recommendations from the weakest MEASURABLE domains (< 70) in this layer.
         # L4 例外:教练建议由渲染件专块(HARNESS_AXIS_ADVICE)承载,不进本管线。
         recos = []
-        if code != "L4":
+        if code != "L3":
             for dv in sorted([d for d in dom_views if d["score"] is not None],
                              key=lambda x: x["score"]):
                 if dv["score"] >= 70 or dv["code"] not in DOMAIN_ADVICE:
@@ -9249,11 +9251,11 @@ def _assemble_layers(domains, tags_by_layer, evidence_by_layer, mode_override=No
                        f"最强 {best['code']} {best['score']}、最弱 {worst['code']} {worst['score']}。"
                        + (f"另有 {n_insuf} 个域数据不足。" if n_insuf else ""))
         else:
-            if code == "L4":
+            if code == "L3":
                 if mode_override == "manual":
                     # --mode manual 强制限池:信号可能明明存在,导语必须说强制,
                     # 不能说「本卡没有」(0.4.0 终审修补,诚实披露硬约束)。
-                    summary = ("本卡以 --mode manual 强制限池,L4 不计入,"
+                    summary = ("本卡以 --mode manual 强制限池,L3 不计入,"
                                "总分按剩余层重新折算。")
                 else:
                     summary = ("本层需要工作流框架（spec-kit、superpowers 这类）"
@@ -9303,8 +9305,8 @@ def build_capability_model(m, s):
     # L4 计分资格判定依据(0.4.0 终审修补):挂在 L4 层对象上,md/html 渲染件
     # 各取一行;不计入时为空串(空层导语已说明,不重复)。
     for _ly in layers:
-        if _ly["code"] == "L4":
-            _ly["qualification"] = _l4_qualification_note(
+        if _ly["code"] == "L3":
+            _ly["qualification"] = _harness_qualification_note(
                 m, _ly["score"] is not None, _override)
     return {
         "layers": layers,
@@ -9414,20 +9416,20 @@ def build_batch_capability_model(results, mode_override=None):
     # L4 计分资格判定依据(0.4.0 终审修补,与池构成句同路):批量口径的证据
     # 是「多少个会话检出框架信号」(逐会话 classify_mode 证据在合并卡不可引),
     # 层分来源(显著度加权)一并向读者交代;不计入时留空,空层导语已说明。
-    _n_l4 = sum(1 for _r, dm, _cap in per
+    _n_harness = sum(1 for _r, dm, _cap in per
                 if any(dm.get(_ax, {}).get("score") is not None
                        for _ax in HARNESS_AXIS_ORDER))
     for _ly in layers:
-        if _ly["code"] == "L4" and _ly["score"] is not None:
+        if _ly["code"] == "L3" and _ly["score"] is not None:
             if mode_override in ("manual", "auto"):
                 _ly["qualification"] = (
-                    f"L4 计入本卡:用户以 --mode {mode_override} 强制指定;"
-                    f"{_n_l4}/{len(per)} 个会话检出框架信号(L4 计分),"
+                    f"L3 计入本卡:用户以 --mode {mode_override} 强制指定;"
+                    f"{_n_harness}/{len(per)} 个会话检出框架信号(L3 计分),"
                     "层分按各会话结果显著度加权合成。")
             else:
                 _ly["qualification"] = (
-                    f"L4 计入本卡:{_n_l4}/{len(per)} 个会话由工作流框架驱动"
-                    "(L4 计分),层分按各会话结果显著度加权合成。")
+                    f"L3 计入本卡:{_n_harness}/{len(per)} 个会话由工作流框架驱动"
+                    "(L3 计分),层分按各会话结果显著度加权合成。")
 
     # Aggregate risk tags: union of session tags with summed/representative desc.
     risk_names = {}
@@ -10300,7 +10302,7 @@ _LOGO_SVG = ('<svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" '
              '<path d="M3 12l4-4 4 4 6-6 4 4"/><path d="M3 18h18"/></svg>')
 
 _LAYER_NAMES = {"L1": "基础技巧与交互控制", "L2": "软件工程实践与风险",
-                "L3": "综合效能与组织杠杆", "L4": "自主任务委托与把关"}
+                "L3": "自主任务委托与把关", "L4": "综合效能与组织杠杆"}
 _LAYER_WEIGHTS = {"L1": "20%", "L2": "40%", "L3": "20%", "L4": "20%"}
 
 
@@ -10812,8 +10814,8 @@ def _render_layer_section(layer, idx):
         f'<div><div class="layer-tags-col-label">负向行为</div>'
         f'<div class="tag-cloud">{_render_tag_cloud(layer["neg_tags"], "neg")}</div></div></div></div>')
     ev_block = ""  # 证据摘要已从主线移除,改由每域卡片的【查看证据】抽屉承载(P0 可解释性)。
-    l4_extra = ""
-    if code == "L4":
+    harness_extra = ""
+    if code == "L3":
         note = ""
         _q = layer.get("qualification")
         if _q:
@@ -10821,7 +10823,7 @@ def _render_layer_section(layer, idx):
             note += (f'<div class="hero-note" style="margin:12px 0">'
                      f'判定依据：{_esc(_q)}</div>')
         note += (f'<div class="hero-note" style="margin:12px 0">'
-                 f'口径：{_esc(L4_RUBRIC_DISCLOSURE)}</div>')
+                 f'口径：{_esc(HARNESS_RUBRIC_DISCLOSURE)}</div>')
         tips = "".join(
             f'<li><strong>{_esc(dv["code"])} {_esc(dv["name"])}</strong>：'
             + "".join(_esc(t) for t in HARNESS_AXIS_ADVICE[dv["code"]])
@@ -10830,18 +10832,18 @@ def _render_layer_section(layer, idx):
                  f'<div class="sub-section-title"><span class="sub-num">'
                  f'{code}.3</span>教练建议</div></div>'
                  f'<ul class="note-list">{tips}</ul></div>')
-        l4_extra = note + (coach if layer["score"] is not None else "")
+        harness_extra = note + (coach if layer["score"] is not None else "")
     # 改进建议块:L4 恒不渲染(recos 被装配层抑制恒空,空态提示「本层无显著
     # 短板」对 L4 失真,编号也会与教练建议 L4.3 相撞);L1–L3 维持现状 ——
     # recos 空时仍渲染空态提示,非空时渲染 reco 卡(既有行为零改动)。
     reco_block = ""
-    if code != "L4":
+    if code != "L3":
         reco_block = (
             f'<div class="sub-section"><div class="sub-section-header">'
             f'<div class="sub-section-title"><span class="sub-num">{code}.3</span>改进建议</div></div>'
             f'{_render_reco_list(layer["recos"], code)}</div>')
     return (f'<section class="section" id="section-{code}">'
-            f'{banner}{summary}{domains_block}{tags_block}{l4_extra}{ev_block}{reco_block}</section>')
+            f'{banner}{summary}{domains_block}{tags_block}{harness_extra}{ev_block}{reco_block}</section>')
 
 
 def _render_risk_cards(risk_tags):
@@ -10956,7 +10958,7 @@ def _md_capability_lines(cap):
         if ly["score"] is not None:
             sc = f"{int(round(ly['score']))}"
         else:
-            sc = "不计入" if ly["code"] == "L4" else "数据不足"
+            sc = "不计入" if ly["code"] == "L3" else "数据不足"
         L.append(f"| {ly['code']} | {ly['title']} | "
                  f"{int(round(ly['weight'] * 100))}% | {sc} |")
     L.append("")
@@ -10964,24 +10966,24 @@ def _md_capability_lines(cap):
         if ly["score"] is not None:
             sc = f"{int(round(ly['score']))}/100"
         else:
-            sc = "不计入" if ly["code"] == "L4" else "数据不足"
+            sc = "不计入" if ly["code"] == "L3" else "数据不足"
         L += [f"### {ly['code']} · {ly['title']} - {sc} ({ly['rating_label']})", "",
               ly["summary"], "",
               "| 域 | 能力 | 得分 | 说明 |", "| --- | --- | --- | --- |"]
         for d in ly["domains"]:
             dsc = f"{d['score']}" if d["score"] is not None else (
-                "不计入" if ly["code"] == "L4" else "数据不足")
+                "不计入" if ly["code"] == "L3" else "数据不足")
             finding = d["finding"].replace("|", "/").replace("\n", " ")
             L.append(f"| {d['code']} | {d['name']} | {dsc} | {finding} |")
         pos = ", ".join(f"{lbl} x{c}" for lbl, c in ly["pos_tags"]) or "（未检测到）"
         neg = ", ".join(f"{lbl} x{c}" for lbl, c in ly["neg_tags"]) or "（未检测到）"
         L += ["", f"- **正向行为：** {pos}", f"- **负向行为：** {neg}"]
-        if ly["code"] == "L4" and ly["score"] is not None:
+        if ly["code"] == "L3" and ly["score"] is not None:
             _q = ly.get("qualification")
             if _q:
                 # L4 计分资格判定依据(0.4.0 终审修补;docs §14.1 承诺的披露)
                 L.append(f"- **判定依据：** {_q}")
-            L.append(f"- **口径：** {L4_RUBRIC_DISCLOSURE}")
+            L.append(f"- **口径：** {HARNESS_RUBRIC_DISCLOSURE}")
             L += ["", "**教练建议**", ""]
             for dv in ly["domains"]:
                 L.append(f"**{dv['code']} {dv['name']}**")
@@ -11020,7 +11022,7 @@ def _pool_composition_sentence(counts, override=None):
     if manual + auto == 0:
         return ""
     s = (f"会话池:{manual + auto} 个会话进本卡;其中 {auto} 个由工作流框架驱动"
-         f"(L4 计分),{manual} 个不带框架信号(L4 不计入)")
+         f"(L3 计分),{manual} 个不带框架信号(L3 不计入)")
     exc = int(counts.get("compact_excluded") or 0)
     if exc:
         s += (f";另有 {exc} 个是 /compact 自动压缩产生的机器总结转录,"
@@ -11124,8 +11126,8 @@ def _render_manual_html(model):
     toc_entries += [
         ("section-L1", "L1", "基础技巧与交互控制", "A1–A4 · 20%"),
         ("section-L2", "L2", "软件工程实践与风险", "B0–B10 · 40% ⭐"),
-        ("section-L3", "L3", "综合效能与组织杠杆", "C1–C6 · 20%"),
-        ("section-L4", "L4", "自主任务委托与把关", "H1–H5 · 20%"),
+        ("section-L3", "L3", "自主任务委托与把关", "H1–H5 · 20%"),
+        ("section-L4", "L4", "综合效能与组织杠杆", "C1–C6 · 20%"),
         ("section-stats", "ST", "统计分析", "强项 · 短板 · 得分分布"),
         ("section-risk", "RM", "风险与方法论", None),
         ("section-learning", "LC", "学习中心", "薄弱域配套模块"),
@@ -11460,8 +11462,8 @@ def _batch_coaching_tips(agg, results, layer_scores=None):
     if ls.get("L1") is not None and ls["L1"] < 70:
         tips.append("L1 基础技巧与交互控制有提升空间。先拆解任务、设确认点,"
                     "先搜索读取再动手,报错后补充信息缩小范围而非反复重试。")
-    if ls.get("L3") is not None and ls["L3"] < 70:
-        tips.append("L3 综合效能与组织杠杆偏弱。复杂任务拆给子代理,"
+    if ls.get("L4") is not None and ls["L4"] < 70:
+        tips.append("L4 综合效能与组织杠杆偏弱。复杂任务拆给子代理,"
                     "把反复用的规则沉淀进 CLAUDE.md/hooks,按任务难度分流模型。")
     if agg["std"] > 15:
         tips.append(f"会话间分数波动较大(std = {agg['std']:.1f})。追求稳定:"
@@ -11921,9 +11923,10 @@ def render_batch_html(ctx):
 
     toc = _cap_toc([
         ("overview", "00", "画像概览", None),
-        ("section-L1", "L1", "基础技巧与交互控制", "A1·A2·A3·A4 · 25%"),
-        ("section-L2", "L2", "软件工程实践与风险", "B0–B10 · 50% ⭐"),
-        ("section-L3", "L3", "综合效能与组织杠杆", "C1–C6 · 25%"),
+        ("section-L1", "L1", "基础技巧与交互控制", "A1–A4 · 20%"),
+        ("section-L2", "L2", "软件工程实践与风险", "B0–B10 · 40% ⭐"),
+        ("section-L3", "L3", "自主任务委托与把关", "H1–H5 · 20%"),
+        ("section-L4", "L4", "综合效能与组织杠杆", "C1–C6 · 20%"),
         ("section-trend", "TR", "能力趋势追踪", None),
         ("section-breakdown", "DD", "段位 / 项目 / 会话明细", None),
         ("section-risk", "RM", "风险与建议", None),
@@ -12124,7 +12127,7 @@ def run_batch(args):
     ctx = build_batch_context(results, skipped, n_excluded, args)
     ctx["pool_counts"] = pool_counts
     # --mode 强制限池时池构成句必须披露来源(与合集卡同口径),否则
-    # 「N 个不带框架信号(L4 不计入)」对被强制限池的会话是失实陈述。
+    # 「N 个不带框架信号(L3 不计入)」对被强制限池的会话是失实陈述。
     ctx["mode_override"] = override
     agg = ctx["agg"]
 
@@ -17702,7 +17705,7 @@ _ENGINE_VERSION = "0.1.0"
 # 报告戳 / --version 都跟它。与引擎轴(_ENGINE_VERSION,打包/信封轴,惯例
 # 长期不动)、口径轴(rules_version,改规则表才动,golden 锁绑它)三轴并行,
 # 轴间不强制相等;发布历史见包内 CHANGELOG.md(打包闸校验其头条与本值一致)。
-_RELEASE_VERSION = "0.4.0"
+_RELEASE_VERSION = "0.4.1"
 # 门称谓直接用问题本身命名(2026-09-07 用户拍板:报告全篇写工程师看得懂的
 # 人话,不再用「门一/门二/门三」内部黑话当行文主语)。
 _GATE_TITLES = {"secret": "密钥泄露", "no_verification": "缺少可运行的验证",

@@ -49,7 +49,7 @@ python3 <SKILL_DIR>/score_session.py --batch --out ./vibe-eval-reports
 质量)默认不跑,需要时走**导出-灌回两步、零联网**:`--judge-export` 出评审包
 → coding agent 按包内提示词就地评 → `--judge-import` 灌回出分(单会话与
 合集评分都支持)。
-报告是一张四层单卡(L1–L4 合一个总分;无框架信号的会话 L4 不计入、按剩余
+报告是一张四层单卡(L1–L4 合一个总分;无框架信号的会话 L3 不计入、按剩余
 层重归一),合集/批量同为单卡;产出
 Markdown + HTML 评分卡到
 `./vibe-eval-reports/`。**先把本地报告路径给用户**,报告文案全中文、
@@ -103,7 +103,7 @@ python3 <SKILL_DIR>/upload_report.py ./vibe-eval-reports/<报告>.md --name <项
 ## 边界(遵守)
 
 - 评分口径以仓库 `docs/evaluation-system.md` 为唯一真源,本 skill 不解释分数争议,引导用户看报告内复核线索。
-- L4(自主任务委托与把关)口径 v0.1 未校准,见 docs/evaluation-system.md 附录 A §14。
+- L3(自主任务委托与把关)口径 v0.1 未校准,见 docs/evaluation-system.md 附录 A §14。
 - 会话评分默认离线确定性;语义轨(评审包导出-灌回,零联网)仅在用户需要时跑,绝不为求「更准」默认打开。
 - 上传限速 30 次/时/IP,单载荷 ≤256KB;超了如实转告用户先裁剪。
 - 上传被拒时把服务端返回的中文拒因原样转告,不要自行改写载荷绕过校验。
