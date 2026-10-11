@@ -9738,7 +9738,7 @@ def build_model(session_id, m, s):
     ]
     notes.append(
         "以前(0.3.0–0.3.1)普通会话与工作流框架会话分开评、各出各的总分,"
-        "两张卡永不合并;自本版(0.4.0)起并成一张卡:框架信号折成第四层 L4,"
+        "两张卡永不合并;自本版(0.4.0)起并成一张卡:框架信号折成第三层 L3,"
         "计入同一个 100 分总分。旧版双轨报告与本版总分不可直接对比。")
     if m["prompts_not_measurable"]:
         notes.insert(1,
@@ -12859,7 +12859,7 @@ def build_arg_parser():
     )
     parser.add_argument(
         "--mode", choices=("manual", "auto"), default=None,
-        help="限池过滤器(0.4.0):manual = 本单元 L4 不计入;auto = 按框架口径评 L4;"
+        help="限池过滤器(0.4.0):manual = 本单元 L3 不计入;auto = 按框架口径评 L3;"
              "不传 = 按 harness 信号自动判定。作用于单会话/合集/批量。")
     parser.add_argument(
         "--doc-list", action="store_true",
@@ -17705,7 +17705,7 @@ _ENGINE_VERSION = "0.1.0"
 # 报告戳 / --version 都跟它。与引擎轴(_ENGINE_VERSION,打包/信封轴,惯例
 # 长期不动)、口径轴(rules_version,改规则表才动,golden 锁绑它)三轴并行,
 # 轴间不强制相等;发布历史见包内 CHANGELOG.md(打包闸校验其头条与本值一致)。
-_RELEASE_VERSION = "0.4.1"
+_RELEASE_VERSION = "0.4.2"
 # 门称谓直接用问题本身命名(2026-09-07 用户拍板:报告全篇写工程师看得懂的
 # 人话,不再用「门一/门二/门三」内部黑话当行文主语)。
 _GATE_TITLES = {"secret": "密钥泄露", "no_verification": "缺少可运行的验证",
