@@ -6,11 +6,11 @@
   },
   {
    "path": "skills/project-eval/CHANGELOG.md",
-   "sha256": "0d9d92fec4769315ea0406595f7c6757d559f46589742d78ca3668f58ead3d2a"
+   "sha256": "3f89f9dec4feb532bb8df711e65f12acfc72b41526448ec249ebc4795a6d5f78"
   },
   {
    "path": "skills/project-eval/SKILL.md",
-   "sha256": "9d8c3e1438c2239f92146ac8e37ed6d35f9634bd7199d1b63abc96ad163b5463"
+   "sha256": "b6d8d8209b1ff8d01995192fbf12fb625ba734ed6ea1f2a51407d43c31b401e2"
   },
   {
    "path": "skills/project-eval/domain_content.py",
@@ -22,7 +22,7 @@
   },
   {
    "path": "skills/project-eval/manifest.json",
-   "sha256": "42dd30a236a8b0280d59a439793011ecdba53309e970a998aa4038b75a64aff1"
+   "sha256": "2954dd9cd12ac9e41e9686abf32fa3b9c22e00b78fe58564ecaffa24daf91e93"
   },
   {
    "path": "skills/project-eval/rulers/design.json",
@@ -50,7 +50,7 @@
   },
   {
    "path": "skills/project-eval/score_session.py",
-   "sha256": "52d9f30dd45b087f5d8d5701b0a393e993f2a52fe2719a5900cc710a9740446c"
+   "sha256": "0057a7fe2a9bd3e4a8e88710ebdcefa72447b89d9b52f0925213fb0b929c864b"
   },
   {
    "path": "skills/project-eval/upload_report.py",
@@ -58,11 +58,11 @@
   },
   {
    "path": "skills/vibe-eval/README.md",
-   "sha256": "4780e8e347f3cd2ac4dc11d12d5c96e9c69ea88a6b322bf39ee5aae341773018"
+   "sha256": "32578f81b12f67dd6a75ff47c040d5f00b7809ae645f9e771c0ce848fe421e4b"
   },
   {
    "path": "skills/vibe-eval/SKILL.md",
-   "sha256": "7d9b00ca803e94200bc1f583984684cbeb51c8606c7990c596587d8ca09d22f3"
+   "sha256": "d5b2bcc113e7586ca03dec9ca5f58e26805dd66d0fb9bb6f758563ef0b6af9b0"
   },
   {
    "path": "skills/vibe-eval/domain_content.py",
@@ -130,12 +130,12 @@
   },
   {
    "path": "skills/vibe-eval/score_session.py",
-   "sha256": "52d9f30dd45b087f5d8d5701b0a393e993f2a52fe2719a5900cc710a9740446c"
+   "sha256": "0057a7fe2a9bd3e4a8e88710ebdcefa72447b89d9b52f0925213fb0b929c864b"
   },
   {
    "path": "skills/vibe-eval/upload_report.py",
    "sha256": "6e99e7fa8c24fa1c2bb45f7acf20109d90b5ea66cc5d99337290a2cfb3757082"
   }
  ],
- "release_version": "0.4.2"
+ "release_version": "0.4.3"
 }

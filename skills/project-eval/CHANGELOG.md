@@ -1,5 +1,16 @@
 # project-eval skill 发布历史
 
+## 0.4.3 - 2026-10-19
+
+跨 agent、跨平台安装适配(发布轴 0.4.2 → **0.4.3**;评分逻辑零触碰,`SCORING_RULES_VERSION` 保持 "5",golden 锚逐位不变):
+
+- 五个 agent 的安装落点核实并写进文档:Claude Code `~/.claude/skills/`、Codex 与 Cursor `~/.agents/skills/`、ZCode `~/.zcode/skills/`、Trae `~/.trae/skills/`(Trae CN `~/.trae-cn/skills/`);Windows 对应 `%USERPROFILE%\.<agent>\skills\`。
+- 两个 SKILL.md 去掉 Claude 专属写法(`/project-eval` 斜杠),命令示例补「Ubuntu 用 `python3`、Windows 用 `py -3` 回退 `python`」、路径加引号、Python ≥3.9 检查、沙箱读取转录目录的授权提示与 WSL 下 `CLAUDE_CONFIG_DIR` 指向。
+- 安装说明重写(bundle `INSTALL.md`、`vibe-eval/README.md`、project-eval 安装节、分发仓 README/CI 模板):Codex/Cursor 不再按「无 skills 机制、往 AGENTS.md / .cursor/rules 粘正文」的旧教法写。
+- 分发仓 CI 冒烟纳入 Cursor,落点断言改为四个真实目录;本仓 CI 增加 `windows-latest` job 跑全量测试。
+- 引擎入口把 stdout/stderr 尽力切到 UTF-8,避免 Windows 管道下的中文乱码。
+- 以上均为文案、安装与验证面改动,不碰评分公式与规则表;0.4.2 的分数与 0.4.3 逐位一致。
+
 ## 0.4.2 - 2026-10-11
 
 层号对调的两处文案残留收尾(发布轴 0.4.1 → **0.4.2**;评分逻辑零触碰,`SCORING_RULES_VERSION` 保持 "5",golden 锚逐位不变):

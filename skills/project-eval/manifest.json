@@ -8,14 +8,14 @@
    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   },
   {
-   "bytes": 58186,
+   "bytes": 59455,
    "path": "CHANGELOG.md",
-   "sha256": "0d9d92fec4769315ea0406595f7c6757d559f46589742d78ca3668f58ead3d2a"
+   "sha256": "3f89f9dec4feb532bb8df711e65f12acfc72b41526448ec249ebc4795a6d5f78"
   },
   {
-   "bytes": 13779,
+   "bytes": 14908,
    "path": "SKILL.md",
-   "sha256": "9d8c3e1438c2239f92146ac8e37ed6d35f9634bd7199d1b63abc96ad163b5463"
+   "sha256": "b6d8d8209b1ff8d01995192fbf12fb625ba734ed6ea1f2a51407d43c31b401e2"
   },
   {
    "bytes": 6853,
@@ -58,9 +58,9 @@
    "sha256": "1a70d5eeb9685905f9f11db9b72372760ed7f0be4a46fa526d477bd7147d690a"
   },
   {
-   "bytes": 1112805,
+   "bytes": 1113295,
    "path": "score_session.py",
-   "sha256": "52d9f30dd45b087f5d8d5701b0a393e993f2a52fe2719a5900cc710a9740446c"
+   "sha256": "0057a7fe2a9bd3e4a8e88710ebdcefa72447b89d9b52f0925213fb0b929c864b"
   },
   {
    "bytes": 10960,
@@ -68,7 +68,7 @@
    "sha256": "6e99e7fa8c24fa1c2bb45f7acf20109d90b5ea66cc5d99337290a2cfb3757082"
   }
  ],
- "manifest_sha256": "32f1dd07c0b34584fa02c50867e6eadd31884fdcaae904a3eeba4f47768f32eb",
- "release_version": "0.4.2",
+ "manifest_sha256": "47bbcff8de17e7d68760837e72273151de6bd3203800986654787870667cc472",
+ "release_version": "0.4.3",
  "rules_version": "0.2.12"
 }

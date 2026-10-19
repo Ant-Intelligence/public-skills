@@ -1,6 +1,6 @@
 ---
 name: vibe-eval
-description: 评估用户驾驭 AI 编程助手的水平(vibe-eval 评人),对 Claude Code 会话转录按 L1–L4 四层 + 26 能力域单卡打分,中文评分卡。主流程 = 用户挑一个项目,该项目全部会话自动全量合并评分;单会话/批量画像为可选。当用户说「评一下我这次 vibe coding / AI 使用水平」「给我的会话打分」「生成我的能力画像」或要求 vibe-eval 时使用。默认仅本地零出网,报告生成后询问用户是否上云换访问链接,同意才上。评项目/评文档请用 /project-eval。
+description: 评估用户驾驭 AI 编程助手的水平(vibe-eval 评人),对 Claude Code 会话转录按 L1–L4 四层 + 26 能力域单卡打分,中文评分卡。主流程 = 用户挑一个项目,该项目全部会话自动全量合并评分;单会话/批量画像为可选。当用户说「评一下我这次 vibe coding / AI 使用水平」「给我的会话打分」「生成我的能力画像」或要求 vibe-eval 时使用。默认仅本地零出网,报告生成后询问用户是否上云换访问链接,同意才上。评项目/评文档请用 project-eval 技能。
 ---
 
 # vibe-eval(会话评分 · 评人;默认仅本地,上云 opt-in)
@@ -11,12 +11,30 @@ description: 评估用户驾驭 AI 编程助手的水平(vibe-eval 评人),对 C
 上云(默认本地)**;单会话评分与批量画像为可选路径。目录自带全部脚本,
 纯标准库零依赖,Python 3.9+。下文 `<SKILL_DIR>` 指本 SKILL.md 所在目录的绝对路径。
 
-> **评项目 / 评文档 → 用 `/project-eval`**(2026-09-06 起 project-eval 整包
-> 评估与文档轨 doc-eval 都在独立 skill `/project-eval` 下,含五阶段验收尺
-> 与尺子管理;本 skill 的 doc-eval 已移走并屏蔽,不再从这里提供)。
+> **运行环境(跨 agent / 跨平台)**:本 skill 在 Claude Code、Codex、Cursor、
+> ZCode、Trae 里都按同一套 SKILL.md 工作。
+> - **Python ≥3.9**。Ubuntu / macOS 命令用 `python3`;Windows 用 `py -3`
+>   (没有再用 `python`),例如 `py -3 "<SKILL_DIR>\score_session.py" --coll-list`。
+>   下文命令统一以 `python3` 书写,Windows 换成 `py -3` 或 `python` 即可。
+> - 命令里的路径**一律加引号**,防止空格 / 中文用户名把参数拆开。
+> - Windows 管道输出可能是 GBK:加 `-X utf8`(如 `py -3 -X utf8 ...`)或设
+>   `PYTHONUTF8=1`,避免中文乱码。
+> - 转录目录在工作区外(`~/.claude/projects`;Windows 为
+>   `%USERPROFILE%\.claude\projects`),agent 沙箱可能要求授权;读不到时按该
+>   agent 的授权方式放行转录目录,**不要改评分口径**。
+> - WSL 里 `~` 是 Linux home:要读 Windows 侧转录,设
+>   `CLAUDE_CONFIG_DIR=/mnt/c/Users/<用户名>/.claude`;多个账号目录用**逗号**
+>   分隔(不是 Windows 的 `;`)。
 
-目前**只认 Claude Code 转录**(`~/.claude/projects/**/*.jsonl`);其它
-agent 的转录适配未做。
+> **评项目 / 评文档 → 用 project-eval 技能**(2026-09-06 起 project-eval 整包
+> 评估与文档轨 doc-eval 都在独立 skill `project-eval` 下,含五阶段验收尺
+> 与尺子管理;本 skill 的 doc-eval 已移走并屏蔽,不再从这里提供)。调用写法
+> 各 agent 不同:Claude Code / Cursor 用 `/project-eval`,Codex 用
+> `$project-eval`,其它 agent 直接说「用 project-eval 评估这个项目」。
+
+**数据源只认 Claude Code 转录**(`~/.claude/projects/**/*.jsonl`;Windows 为
+`%USERPROFILE%\.claude\projects\**\*.jsonl`)。skill 本身可在 Claude Code /
+Codex / Cursor / ZCode / Trae 里运行,但这些 agent 自己的会话转录不在支持范围。
 
 ## 执行步骤
 

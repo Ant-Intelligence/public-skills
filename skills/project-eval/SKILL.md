@@ -10,9 +10,27 @@ description: "project-eval(评项目):评估一个项目能否支撑「下一个
 
 ## 安装
 
-- **用户级安装**:`mkdir -p ~/.claude/skills/project-eval`,把包内全部文件拷入该目录
-  (重启 Claude Code 生效);特殊需要装项目内亦可,**安装位置不影响评估行为**。
-- **零依赖,不要求安装任何包**:Python 3.9+(仅标准库),`python3` 可用即可。
+推荐用 skills CLI 一行装(自动识别本机 agent,也可 `-a` 显式指定):
+
+```bash
+npx -y skills add Ant-Intelligence/public-skills --skill project-eval -g
+# 只装指定 agent:加 -a claude-code -a codex -a cursor -a zcode -a trae
+```
+
+用户级落点(skills CLI 实测):Claude Code `~/.claude/skills/`;Codex 与
+Cursor `~/.agents/skills/`;ZCode `~/.zcode/skills/`;Trae `~/.trae/skills/`;
+Trae CN `~/.trae-cn/skills/`。Windows 把 `~` 换成 `%USERPROFILE%`。手工安装
+就把整个 `project-eval/` 目录拷进对应落点,**安装位置不影响评估行为**;装完
+重启对应 agent。Node 只在安装时用到,运行时不需要。
+
+> **运行环境(跨 agent / 跨平台)**:Python 3.9+(仅标准库)。Ubuntu / macOS
+> 命令用 `python3`;Windows 用 `py -3`(没有再用 `python`),路径一律加引号;
+> Windows 加 `-X utf8` 或设 `PYTHONUTF8=1` 防中文乱码。下文命令以 `python3`
+> 书写,Windows 换解释器即可。
+> 报告默认落 `~/.project-eval/reports`(工作区外),沙箱 agent 建议显式
+> `--out ./project-eval-reports`;读被评项目若被沙箱拦,按 agent 的授权方式放行,
+> **不要为跑评估去改被评项目权限**。
+
 - 评估器自带排除集双保险:无论装在哪,评估器自身文件都不会被自己拾取计分
   (安装位置在排除集内的「自拾取事故」必须为零)。
 
@@ -25,7 +43,8 @@ description: "project-eval(评项目):评估一个项目能否支撑「下一个
 
 ```bash
 # 位置参数指向「目录」= 项目评估;--out 指定报告目录(默认在被评项目之外)
-python3 <包根>/score_session.py <被评项目路径> --out <报告目录>
+# 沙箱 agent 建议用工作区内路径,避免默认落点 ~/.project-eval/reports 被拦
+python3 <包根>/score_session.py <被评项目路径> --out ./project-eval-reports
 
 # 等价显式写法;--project-scan 只做拾取干跑(预览 + 确认,不出分)
 python3 <包根>/score_session.py --project <被评项目路径>
@@ -59,7 +78,8 @@ python3 <包根>/score_session.py --project <被评项目路径>
    —— 落盘 `problems.json` + 每问题 `pack-<pid>.md`(问题 + 六档 anchors 原文 +
    真实投喂片段)+ `verdicts.template.json`,零联网;**召回包每包数万字,绝不
    读进主会话上下文**;
-3. **必须开 sub-agent 逐包评**:每个 sub-agent 只读自己那一包 `pack-<pid>.md`,
+3. **逐包分离评**:有子代理机制的 agent 开 sub-agent,一次一包;没有的就在
+   独立会话里一包一评——不要把多包塞进同一上下文。每个评审单元只读自己那一包 `pack-<pid>.md`,
    按包内 rubric 打档,产出 `{"band":"0..5"字符串,"reason":中文,"citations":[{path,line_start,line_end}]}` 形判定(citation 必须命中包内片段出处,band ≥ 1 必须带有效 citation);
 4. 汇总判定为一份 JSON(结构与 `verdicts.template.json` 同形,`pack_fingerprint`
    原样带回;每问题 1 票即可,兼容 1–3 票折算,多数档 / 平票取低段);

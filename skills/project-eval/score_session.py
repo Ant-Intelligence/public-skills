@@ -17705,7 +17705,7 @@ _ENGINE_VERSION = "0.1.0"
 # 报告戳 / --version 都跟它。与引擎轴(_ENGINE_VERSION,打包/信封轴,惯例
 # 长期不动)、口径轴(rules_version,改规则表才动,golden 锁绑它)三轴并行,
 # 轴间不强制相等;发布历史见包内 CHANGELOG.md(打包闸校验其头条与本值一致)。
-_RELEASE_VERSION = "0.4.2"
+_RELEASE_VERSION = "0.4.3"
 # 门称谓直接用问题本身命名(2026-09-07 用户拍板:报告全篇写工程师看得懂的
 # 人话,不再用「门一/门二/门三」内部黑话当行文主语)。
 _GATE_TITLES = {"secret": "密钥泄露", "no_verification": "缺少可运行的验证",
@@ -21025,7 +21025,19 @@ def _rules_version_for_version_flag():
     return "未知(规则表不可读)"
 
 
+def _ensure_utf8_stdio():
+    """Windows 控制台/管道默认可能是 GBK 等本地编码,中文报告会乱码。
+    尽力把 stdout/stderr 切到 UTF-8;重定向对象(如测试里的 StringIO)
+    没有 reconfigure 就静默跳过,不影响正常输出。"""
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, ValueError, OSError):
+            pass
+
+
 def main(argv=None):
+    _ensure_utf8_stdio()
     args = build_arg_parser().parse_args(argv)
     if args.version:
         print(f"project-eval 发布 {_RELEASE_VERSION}"

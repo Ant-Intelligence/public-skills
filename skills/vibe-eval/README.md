@@ -26,26 +26,47 @@ agent 就会在本地跑评分、把报告递给你 —— **默认仅本地、�
 
 ## 安装到各家 agent
 
-**Claude Code**(原生支持 skills,体验最好):
+推荐用 skills CLI 一行装(自动识别本机 agent,也可 `-a` 显式指定):
 
 ```bash
-mkdir -p ~/.claude/skills
-cp -r vibe-eval ~/.claude/skills/        # 整个目录拷进去
-# 之后在 Claude Code 里:/vibe-eval 或直接说「评一下我这次 vibe coding」
+npx -y skills add Ant-Intelligence/public-skills --skill vibe-eval -g
+# 只装指定 agent:加 -a claude-code -a codex -a cursor -a zcode -a trae
 ```
 
-**Codex**:把 `SKILL.md` 的正文(frontmatter 以下)追加到项目根的 `AGENTS.md`
-(或 `~/.codex/AGENTS.md` 全局),并把本目录拷到项目里;Codex 读到规程后
-按里面的命令执行。也可以直接对它说「读 vibe-eval/SKILL.md 并按它评一次」。
+用户级落点(skills CLI 实测):
 
-**Cursor**:`.cursor/rules/` 下建 `vibe-eval.mdc`,把 SKILL.md 正文粘进去,
-`globs` 留空、勾 `Always Apply` 或按需手动引用;脚本目录拷进项目。
+| Agent | Ubuntu / macOS | Windows |
+|---|---|---|
+| Claude Code | `~/.claude/skills/` | `%USERPROFILE%\.claude\skills\` |
+| Codex | `~/.agents/skills/` | `%USERPROFILE%\.agents\skills\` |
+| Cursor | `~/.agents/skills/`(也读 `~/.cursor/skills/`) | `%USERPROFILE%\.agents\skills\` |
+| ZCode | `~/.zcode/skills/` | `%USERPROFILE%\.zcode\skills\` |
+| Trae | `~/.trae/skills/` | `%USERPROFILE%\.trae\skills\` |
 
-**Trae / Qoder / zcode**:这些 IDE 都支持自定义规则/指令文件,把 SKILL.md
-正文放进各自的「自定义规则」(如 Trae 的 `user_rules` / 项目规则)即可;
-或者直接对 agent 说「读 vibe-eval/SKILL.md,按里面的步骤给我评估」。
+Trae CN 用 `~/.trae-cn/skills/`(安装时 `-a trae-cn`)。手工安装就把整个
+`vibe-eval/` 目录拷进对应落点;装完重启对应 agent。Node 只在安装时用到,
+运行时不依赖 Node。
 
-> 通用兜底:任何 agent,直接把 `SKILL.md` 喂给它(「读这个文件并照做」)就能跑通。
+**调用方式**:Claude Code / Cursor 用 `/vibe-eval`,Codex 用 `$vibe-eval`,
+其它 agent 直接说「用 vibe-eval 评一下」或按 description 自动触发。
+
+**运行**:Python 3.9+。Ubuntu / macOS 用 `python3`;Windows 用 `py -3`
+(没有再用 `python`);路径加引号,并加 `-X utf8` 防中文乱码。
+
+**手工复制(不用 npx 时)**:
+
+```bash
+# Ubuntu / macOS
+cp -r vibe-eval ~/.agents/skills/
+```
+
+```powershell
+# Windows PowerShell(以 Codex / Cursor 为例)
+Copy-Item -Recurse vibe-eval "$HOME\.agents\skills\"
+```
+
+> 通用兜底:任何 agent,直接对它说「读 vibe-eval/SKILL.md 并按它评一次」
+> 也能跑。
 
 ## 一句话验证装好了
 
