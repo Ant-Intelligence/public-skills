@@ -6,29 +6,66 @@ on:
   pull_request:
 
 jobs:
-  smoke:
+  smoke-ubuntu:
     # 分发冒烟:skills CLI 能发现两 skill,并能 --copy 装进各 agent 的用户级目录
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: "22.20.0"
       - name: 发现断言(--list 含两 skill)
         run: |
           npx -y skills@1 add . --list 2>&1 | tee /tmp/list.txt
           grep -q "vibe-eval" /tmp/list.txt
           grep -q "project-eval" /tmp/list.txt
-      - name: 五 agent --copy 用户级安装冒烟
-        run: npx -y skills@1 add . --skill vibe-eval --skill project-eval -a claude-code -a zcode -a trae -a opencode -a codex --copy -g -y
-      - name: 各 agent 用户级目录文件在位断言
-        # 落点按 skills CLI 1.5.18 五 agent 逐一 `-g` 实测(2026-10-08);
-        # opencode 与 codex 共用 ~/.agents/skills/,无各自独立目录。
+      - name: 六 agent --copy 用户级安装冒烟
+        run: npx -y skills@1 add . --skill vibe-eval --skill project-eval -a claude-code -a codex -a cursor -a zcode -a trae -a opencode --copy -g -y
+      - name: 各 agent 用户级落点断言
+        # 实测:codex / cursor / opencode 共用 ~/.agents/skills/,无各自独立目录。
         run: |
           test -f "$HOME/.claude/skills/vibe-eval/SKILL.md"
           test -f "$HOME/.claude/skills/vibe-eval/score_session.py"
           test -f "$HOME/.claude/skills/project-eval/SKILL.md"
-          test -f "$HOME/.zcode/skills/vibe-eval/SKILL.md"
-          test -f "$HOME/.trae/skills/vibe-eval/SKILL.md"
           test -f "$HOME/.agents/skills/vibe-eval/SKILL.md"
           test -f "$HOME/.agents/skills/project-eval/SKILL.md"
+          test -f "$HOME/.zcode/skills/vibe-eval/SKILL.md"
+          test -f "$HOME/.trae/skills/vibe-eval/SKILL.md"
+      - name: 装好的引擎能跑
+        run: |
+          python3 "$HOME/.agents/skills/vibe-eval/score_session.py" --version
+          python3 "$HOME/.agents/skills/vibe-eval/score_session.py" --coll-list
+
+  smoke-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.20.0"
+      - name: 发现断言(--list 含两 skill)
+        shell: pwsh
+        run: |
+          npx -y skills@1 add . --list 2>&1 | Tee-Object -FilePath list.txt
+          if (-not (Select-String -Quiet -Path list.txt -Pattern "vibe-eval")) { throw "vibe-eval not listed" }
+          if (-not (Select-String -Quiet -Path list.txt -Pattern "project-eval")) { throw "project-eval not listed" }
+      - name: 六 agent --copy 用户级安装冒烟
+        shell: pwsh
+        run: npx -y skills@1 add . --skill vibe-eval --skill project-eval -a claude-code -a codex -a cursor -a zcode -a trae -a opencode --copy -g -y
+      - name: 各 agent 用户级落点断言
+        shell: pwsh
+        run: |
+          $files = @(
+            "$HOME\.claude\skills\vibe-eval\SKILL.md",
+            "$HOME\.agents\skills\vibe-eval\SKILL.md",
+            "$HOME\.agents\skills\project-eval\SKILL.md",
+            "$HOME\.zcode\skills\vibe-eval\SKILL.md",
+            "$HOME\.trae\skills\vibe-eval\SKILL.md"
+          )
+          foreach ($f in $files) { if (-not (Test-Path $f)) { throw "missing: $f" } }
+      - name: 装好的引擎能跑(Windows 解释器)
+        shell: pwsh
+        run: |
+          py -3 --version
+          py -3 -X utf8 "$HOME\.agents\skills\vibe-eval\score_session.py" --version
+          py -3 -X utf8 "$HOME\.agents\skills\vibe-eval\score_session.py" --coll-list
