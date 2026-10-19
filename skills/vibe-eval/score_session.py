@@ -14945,9 +14945,11 @@ def _pj_is_doc_like(rel):
 
 def _pj_self_rel(project_dir, anchor):
     """anchor(评估器自身)若落在被评项目内,返回其项目相对路径;否则 None。排除
-    集用 __file__ 锚(标记文件缺失仍生效 = 自拾取双保险,FR-01)。"""
+    集用 __file__ 锚(标记文件缺失仍生效 = 自拾取双保险,FR-01)。
+    anchor 也要 resolve:Windows 临时目录可能给 8.3 短路径(RUNNER~1),
+    不归一会和已 resolve 的 project_dir 对不上前缀。"""
     try:
-        rel = anchor.relative_to(project_dir)
+        rel = pathlib.Path(anchor).resolve().relative_to(project_dir)
     except ValueError:
         return None
     return pathlib.Path(rel)
@@ -14971,7 +14973,8 @@ def scan_project_dir(project_dir, rules):
     root_fams = _pj_dir_manifest_families(project_dir)   # 同族豁免用(monorepo)
     anchor = _pj_engine_anchor()
     self_rel = _pj_self_rel(project_dir, anchor)
-    anchor_norm = os.path.normpath(str(anchor))
+    # resolve + normcase:Windows 短路径/大小写差异下,不归一会剪不掉引擎子树
+    anchor_norm = os.path.normcase(os.path.normpath(str(anchor.resolve())))
     pickup = rules.get("pickup", {})
     scale = pickup.get("scale", {})
     max_files = int(scale.get("max_files", 5000))
@@ -15013,7 +15016,7 @@ def scan_project_dir(project_dir, rules):
             if d in _PJ_PRUNE_DIR_NAMES:
                 continue
             sub_abs = os.path.normpath(os.path.join(dirpath, d))
-            if sub_abs == anchor_norm:
+            if os.path.normcase(sub_abs) == anchor_norm:
                 continue
             if os.path.exists(os.path.join(sub_abs, ".git")):
                 nested = os.path.relpath(os.path.join(dirpath, d),
@@ -16691,7 +16694,8 @@ def _pc_build_ctx(project_dir, basis, rules):
     scale = pickup.get("scale", {})
     max_bytes = int(scale.get("max_file_bytes", 1048576))
     exclude = pickup.get("exclude", {})
-    anchor_norm = os.path.normpath(str(_pj_engine_anchor()))
+    anchor_norm = os.path.normcase(os.path.normpath(
+        str(_pj_engine_anchor().resolve())))
     root_fams = _pj_dir_manifest_families(project_dir)   # 同族豁免用(monorepo)
     tree = []
     for dirpath, dirnames, filenames in os.walk(project_dir):
@@ -16702,7 +16706,7 @@ def _pc_build_ctx(project_dir, basis, rules):
             if d in _PJ_PRUNE_DIR_NAMES:
                 continue
             sub_abs = os.path.normpath(os.path.join(dirpath, d))
-            if sub_abs == anchor_norm:
+            if os.path.normcase(sub_abs) == anchor_norm:
                 continue
             if os.path.exists(os.path.join(sub_abs, ".git")):
                 continue
@@ -16733,8 +16737,12 @@ def _pc_read(ctx, rel):
     if rel not in ctx["_content"]:
         try:
             p = ctx["project_dir"] / rel
-            ctx["_content"][rel] = p.read_bytes()[
+            text = p.read_bytes()[
                 :ctx["max_bytes"]].decode("utf-8", "replace")
+            # 换行归一到 \n:Windows 检出(core.autocrlf)会带 CRLF,不归一会让
+            # 按行尾锚定的正则(如 setext 标题 `[ \t]*$`)整片失配、判据掉档。
+            norm = text.replace("\r\n", "\n").replace("\r", "\n")
+            ctx["_content"][rel] = norm
         except OSError:
             ctx["_content"][rel] = None
     return ctx["_content"][rel]
@@ -17705,7 +17713,7 @@ _ENGINE_VERSION = "0.1.0"
 # 报告戳 / --version 都跟它。与引擎轴(_ENGINE_VERSION,打包/信封轴,惯例
 # 长期不动)、口径轴(rules_version,改规则表才动,golden 锁绑它)三轴并行,
 # 轴间不强制相等;发布历史见包内 CHANGELOG.md(打包闸校验其头条与本值一致)。
-_RELEASE_VERSION = "0.4.3"
+_RELEASE_VERSION = "0.4.4"
 # 门称谓直接用问题本身命名(2026-09-07 用户拍板:报告全篇写工程师看得懂的
 # 人话,不再用「门一/门二/门三」内部黑话当行文主语)。
 _GATE_TITLES = {"secret": "密钥泄露", "no_verification": "缺少可运行的验证",

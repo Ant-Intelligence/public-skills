@@ -8,9 +8,9 @@
    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   },
   {
-   "bytes": 59455,
+   "bytes": 60344,
    "path": "CHANGELOG.md",
-   "sha256": "3f89f9dec4feb532bb8df711e65f12acfc72b41526448ec249ebc4795a6d5f78"
+   "sha256": "b297b618a89439d645f0dbc1367599d8b65d6433957cd97ca5eefda50c4ba343"
   },
   {
    "bytes": 14908,
@@ -58,9 +58,9 @@
    "sha256": "1a70d5eeb9685905f9f11db9b72372760ed7f0be4a46fa526d477bd7147d690a"
   },
   {
-   "bytes": 1113295,
+   "bytes": 1113941,
    "path": "score_session.py",
-   "sha256": "0057a7fe2a9bd3e4a8e88710ebdcefa72447b89d9b52f0925213fb0b929c864b"
+   "sha256": "29c4af919933719bcd0171aec2f8993de913e95c584d172fe0748c14a5a819bb"
   },
   {
    "bytes": 10960,
@@ -68,7 +68,7 @@
    "sha256": "6e99e7fa8c24fa1c2bb45f7acf20109d90b5ea66cc5d99337290a2cfb3757082"
   }
  ],
- "manifest_sha256": "47bbcff8de17e7d68760837e72273151de6bd3203800986654787870667cc472",
- "release_version": "0.4.3",
+ "manifest_sha256": "df75bb403aff8f0d392187be36735de3a36ec7998511f218f2963f17a9b742d2",
+ "release_version": "0.4.4",
  "rules_version": "0.2.12"
 }

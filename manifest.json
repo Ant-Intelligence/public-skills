@@ -6,7 +6,7 @@
   },
   {
    "path": "skills/project-eval/CHANGELOG.md",
-   "sha256": "3f89f9dec4feb532bb8df711e65f12acfc72b41526448ec249ebc4795a6d5f78"
+   "sha256": "b297b618a89439d645f0dbc1367599d8b65d6433957cd97ca5eefda50c4ba343"
   },
   {
    "path": "skills/project-eval/SKILL.md",
@@ -22,7 +22,7 @@
   },
   {
    "path": "skills/project-eval/manifest.json",
-   "sha256": "2954dd9cd12ac9e41e9686abf32fa3b9c22e00b78fe58564ecaffa24daf91e93"
+   "sha256": "d8382d477639b71d6ded010767b867cabeff2a70ab59afa23c36343600b89b8a"
   },
   {
    "path": "skills/project-eval/rulers/design.json",
@@ -50,7 +50,7 @@
   },
   {
    "path": "skills/project-eval/score_session.py",
-   "sha256": "0057a7fe2a9bd3e4a8e88710ebdcefa72447b89d9b52f0925213fb0b929c864b"
+   "sha256": "29c4af919933719bcd0171aec2f8993de913e95c584d172fe0748c14a5a819bb"
   },
   {
    "path": "skills/project-eval/upload_report.py",
@@ -130,12 +130,12 @@
   },
   {
    "path": "skills/vibe-eval/score_session.py",
-   "sha256": "0057a7fe2a9bd3e4a8e88710ebdcefa72447b89d9b52f0925213fb0b929c864b"
+   "sha256": "29c4af919933719bcd0171aec2f8993de913e95c584d172fe0748c14a5a819bb"
   },
   {
    "path": "skills/vibe-eval/upload_report.py",
    "sha256": "6e99e7fa8c24fa1c2bb45f7acf20109d90b5ea66cc5d99337290a2cfb3757082"
   }
  ],
- "release_version": "0.4.3"
+ "release_version": "0.4.4"
 }

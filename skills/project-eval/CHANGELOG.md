@@ -1,5 +1,15 @@
 # project-eval skill 发布历史
 
+## 0.4.4 - 2026-10-19
+
+Windows 判据与构建链修复(发布轴 0.4.3 → **0.4.4**;评分公式与规则表零触碰,`SCORING_RULES_VERSION` 保持 "5",golden 锚逐位不变):
+
+- 引擎读文档时把 CRLF/CR 归一为 LF:Windows 检出(`core.autocrlf`)下,按行尾锚定的判据会失配,最明显的是 p6 变更记录从档 5 掉到档 0。
+- 评估器自身锚点 resolve + 大小写归一:临时目录 8.3 短路径(`RUNNER~1`)下,引擎子树剪枝与相对路径判断不再失配。
+- 打包 / 发布 / bundle 脚本统一切 UTF-8 stdio;git 等子进程输出显式按 UTF-8 解码;publish 幂等判定改看「暂存后与 HEAD 的差异」,Windows `core.autocrlf` 下不再误发空提交。
+- 本仓 CI 的 Windows job(3.9 / 3.11)修复后全量测试转绿,并固定 `PYTHONUTF8` / `PYTHONIOENCODING`。
+- 评分逻辑零改动:0.4.3 的分数与 0.4.4 逐位一致。
+
 ## 0.4.3 - 2026-10-19
 
 跨 agent、跨平台安装适配(发布轴 0.4.2 → **0.4.3**;评分逻辑零触碰,`SCORING_RULES_VERSION` 保持 "5",golden 锚逐位不变):
