@@ -8,6 +8,14 @@
 2. 26 份量表 `anchors/<域代码>.json`。每份有六节:五档锚点(0 / 25 / 50 / 75 / 100)、该域的检测项 `items`、与相邻域的分界 `boundaries`、不算证据 `not_evidence`、证据不足怎么办 `insufficient`、以及这个域要回答的问题 `question`。
 3. 本文件。
 
+## 证据包里几个字段的意思
+
+- `user_msg` 是人发的消息。`promptSource` 写来源:`typed` 是键盘输入,`queued` 是助手忙时排队发出的,`slash` 是斜杠命令,`paste` 是粘贴。压缩摘要、后台任务通知、本地命令输出不算人发的消息,不进 `user_msg`。
+- `tool_use` 的 `result` 是这次调用的结果。`ok: true` 表示成功。`ok: false` 表示失败:`error_kind` 是 `exit_code`(命令非零退出,`exit_code` 记退出码)、`tool_error`(工具层报错)或 `other`;`rejected: true` 表示人拒绝了这次调用,拒绝不算失败。没有 `result` 表示记录里找不到结果。
+- `interrupt` 是人按 ESC 打断(`type: esc`)或拒绝工具时打断(`type: tool_reject`)。`before_tool` 是被打断前的最后一个工具,`excerpt` 是打断后人发的第一句话。
+- `compaction` 是一次上下文压缩。`trigger` 是 `auto`(自动)或 `manual`(人手动发 `/compact`)。
+- `stats` 是每个会话的全量计数,在裁剪之前算。`interrupts`、`compactions`、`tool_results` 是整个会话的总数;证据包里留下的条目是抽样,条数比这少。
+
 ## 判定的顺序
 
 1. 先从头读一遍证据包,记住这人干了什么、项目是什么、有没有项目文档。
@@ -92,7 +100,7 @@
 ```json
 {
   "schema": "judgment/1",
-  "rules_version": "8",
+  "rules_version": "9",
   "anchor_scale_version": "2",
   "evidence_sha256": "<证据包文件内容的 sha256>",
   "judge": { "host": "claude-code", "model": "...", "model_confidence": "reported", "judged_at": "2026-11-12T09:00:00Z" },

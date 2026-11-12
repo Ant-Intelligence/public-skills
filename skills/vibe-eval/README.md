@@ -42,9 +42,11 @@ npx -y skills remove vibe-eval -g   # 卸载
 
 ## 从 0.4.4 升级
 
-旧版 0.4.4 用 Python。本版 1.0.0 用 Node.js,不再需要 Python。直接跑上面的安装命令,新版会替换旧版的文件。
+旧版 0.4.4 用 Python。1.0.0 起改用 Node.js,不再需要 Python。直接跑上面的安装命令,新版会替换旧版的文件。
 
 旧版报告的分数和新版不能直接比较。两版的检测项和打分规则不同。
+
+1.0.0 的报告和 1.0.1 的报告也不能直接比较。1.0.1 修了取证,判定时看到的证据不一样。装过 1.0.0 的,跑 `npx -y skills update vibe-eval -g` 更新,再重新评一次。
 
 ## 装好之后怎么用
 
@@ -87,4 +89,4 @@ Windows:`%USERPROFILE%\.claude\projects\`。
 WSL 读 Windows 侧:`CLAUDE_CONFIG_DIR=/mnt/c/Users/<用户名>/.claude`。
 多账号用逗号分隔。
 
-版本 1.0.0 · 口径 8
+版本 1.0.1 · 口径 9

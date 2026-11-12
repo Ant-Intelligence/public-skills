@@ -67,11 +67,19 @@ npx -y skills remove vibe-eval -g      # 卸载(project-eval 同理)
 升级:再跑一次上面的安装命令,新版文件会替换旧版。旧版报告的分数和新版不能
 直接比较,两版的检测项和打分规则不同。
 
+## vibe-eval 1.0.1
+
+1.0.1 修了取证:工具调用和结果按编号配对,打断只认用户按 ESC 或拒绝工具,
+不再把系统插入的文字当成人发的消息,token 按回复编号去重,写文件的 heredoc
+正文不再误报危险命令。L3 闸门只数真的框架调用(斜杠命令、`Skill` 工具、子代理
+类型),命令文字里出现框架名不再算调用。检测项和量表没变。1.0.0 的报告和 1.0.1 的报告不能直接
+比较。装过 1.0.0 的,跑 `npx -y skills update vibe-eval -g` 更新,再重新评一次。
+
 ## 版本与复核
 
 本仓 tag(`vX.Y.Z`)与根目录 `manifest.json` 的 `release_version` 一致;
 `manifest.json` 记录每个文件的 SHA-256,可逐文件复核镜像内容。1.0.0 起两个
-skill 的版本号分开:vibe-eval 是 1.0.0,project-eval 仍是 0.4.4(本次未改动)。CI 每次推送在 Ubuntu 与 Windows 上自动做六 agent id 的安装冒烟
+skill 的版本号分开:vibe-eval 是 1.0.1,project-eval 仍是 0.4.4(本次未改动)。CI 每次推送在 Ubuntu 与 Windows 上自动做六 agent id 的安装冒烟
 (五家 + OpenCode)。
 
 ## 平台验证面(如实)
