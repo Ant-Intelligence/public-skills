@@ -25,7 +25,8 @@ jobs:
         # 实测:codex / cursor / opencode 共用 ~/.agents/skills/,无各自独立目录。
         run: |
           test -f "$HOME/.claude/skills/vibe-eval/SKILL.md"
-          test -f "$HOME/.claude/skills/vibe-eval/score_session.py"
+          test -f "$HOME/.claude/skills/vibe-eval/bin/vibe-eval.js"
+          test -f "$HOME/.claude/skills/vibe-eval/anchors/_prompt.md"
           test -f "$HOME/.claude/skills/project-eval/SKILL.md"
           test -f "$HOME/.agents/skills/vibe-eval/SKILL.md"
           test -f "$HOME/.agents/skills/project-eval/SKILL.md"
@@ -33,8 +34,8 @@ jobs:
           test -f "$HOME/.trae/skills/vibe-eval/SKILL.md"
       - name: 装好的引擎能跑
         run: |
-          python3 "$HOME/.agents/skills/vibe-eval/score_session.py" --version
-          python3 "$HOME/.agents/skills/vibe-eval/score_session.py" --coll-list
+          node "$HOME/.agents/skills/vibe-eval/bin/vibe-eval.js" --version
+          node "$HOME/.agents/skills/vibe-eval/bin/vibe-eval.js" coll-list
 
   smoke-windows:
     runs-on: windows-latest
@@ -57,15 +58,17 @@ jobs:
         run: |
           $files = @(
             "$HOME\.claude\skills\vibe-eval\SKILL.md",
+            "$HOME\.claude\skills\vibe-eval\bin\vibe-eval.js",
             "$HOME\.agents\skills\vibe-eval\SKILL.md",
             "$HOME\.agents\skills\project-eval\SKILL.md",
             "$HOME\.zcode\skills\vibe-eval\SKILL.md",
             "$HOME\.trae\skills\vibe-eval\SKILL.md"
           )
           foreach ($f in $files) { if (-not (Test-Path $f)) { throw "missing: $f" } }
-      - name: 装好的引擎能跑(Windows 解释器)
+      - name: 装好的引擎能跑(Windows)
         shell: pwsh
         run: |
-          py -3 --version
-          py -3 -X utf8 "$HOME\.agents\skills\vibe-eval\score_session.py" --version
-          py -3 -X utf8 "$HOME\.agents\skills\vibe-eval\score_session.py" --coll-list
+          node "$HOME\.agents\skills\vibe-eval\bin\vibe-eval.js" --version
+          if ($LASTEXITCODE -ne 0) { throw "vibe-eval --version failed" }
+          node "$HOME\.agents\skills\vibe-eval\bin\vibe-eval.js" coll-list
+          if ($LASTEXITCODE -ne 0) { throw "vibe-eval coll-list failed" }

@@ -58,84 +58,128 @@
   },
   {
    "path": "skills/vibe-eval/README.md",
-   "sha256": "32578f81b12f67dd6a75ff47c040d5f00b7809ae645f9e771c0ce848fe421e4b"
+   "sha256": "5d7bd4147420565858aaf75edfd758d0285df9697ca39bf4606c21f3e7d0e80c"
   },
   {
    "path": "skills/vibe-eval/SKILL.md",
-   "sha256": "d5b2bcc113e7586ca03dec9ca5f58e26805dd66d0fb9bb6f758563ef0b6af9b0"
+   "sha256": "7f73602feb1faa163b52f9a71f01f983c5b853ee32ccb96208325bbee1daec1f"
   },
   {
-   "path": "skills/vibe-eval/domain_content.py",
-   "sha256": "bec9bfb08259b05726ddbcbf2770e5124992da58f4a362053ba4e679ce3835ea"
+   "path": "skills/vibe-eval/anchors/A1.json",
+   "sha256": "eec9c926a42279c91b6f397dce854d7910d8a0e12c55281eb284acff840c942d"
   },
   {
-   "path": "skills/vibe-eval/learning-hub/README.md",
-   "sha256": "861a9ea2231b9708b88a03edb6a69a23954d6c8586f5981feadee0c5910fe42c"
+   "path": "skills/vibe-eval/anchors/A2.json",
+   "sha256": "08dcac9f348dea35fb148976135d88e851b9ccf0c1f126b23c6f99a75bd1be29"
   },
   {
-   "path": "skills/vibe-eval/learning-hub/collaboration-and-knowledge/index.html",
-   "sha256": "7215904daf1ab06fc49cf57558399f67fdb4d4f2fad8c948cc1017fb26881227"
+   "path": "skills/vibe-eval/anchors/A3.json",
+   "sha256": "f12951b4ded0b0d0c7d81b93d0d986766ce56bbd4461afe0306b22c36773684f"
   },
   {
-   "path": "skills/vibe-eval/learning-hub/context-and-boundaries/index.html",
-   "sha256": "ca4959e8ed8fd272a5d1dfeb7265aaa9c7334894811d5fc40e920f27d7697bfe"
+   "path": "skills/vibe-eval/anchors/A4.json",
+   "sha256": "cb6713e75f5eb1ab90052d33695634e57efcf40445ebdbd84010fe9436fb463b"
   },
   {
-   "path": "skills/vibe-eval/learning-hub/cost-and-efficiency/index.html",
-   "sha256": "f4cb348540823503e38f848f64397c700100df2cc6a44850d5f99ed736aa1e48"
+   "path": "skills/vibe-eval/anchors/A5.json",
+   "sha256": "f7e3b038affb4576fa1ba4bdecb7108ad7f447a3a6e1a185fe3262f49c71ff98"
   },
   {
-   "path": "skills/vibe-eval/learning-hub/courses.json",
-   "sha256": "c1a6818cacfbead9aa92a6da3b33216f4baa64371ee06046c81617a495ec67ff"
+   "path": "skills/vibe-eval/anchors/A6.json",
+   "sha256": "8b4b964503d3aec53d7a186424f2a6e2bbdea71e18c5a127f761e82a53c7443b"
   },
   {
-   "path": "skills/vibe-eval/learning-hub/debug-and-recovery/index.html",
-   "sha256": "fa9519179400cbf88d0dbf6f5550ce4a22470f5c92e94917bd9a678b0addda2a"
+   "path": "skills/vibe-eval/anchors/B1.json",
+   "sha256": "be054c2f6c4d990347e8184c5fb5d9a3b816b458901baba21f3f74f39f76c950"
   },
   {
-   "path": "skills/vibe-eval/learning-hub/explore-and-tools/index.html",
-   "sha256": "fc67b265f569398bc722ccb4d6489d01d1a0cca99bbd509b94302105921fb5a5"
+   "path": "skills/vibe-eval/anchors/B10.json",
+   "sha256": "9524490f7702e4714b639a12714bab25f484f0aadf8989119316fbe82faaed7a"
   },
   {
-   "path": "skills/vibe-eval/learning-hub/intent-and-planning/index.html",
-   "sha256": "32373f28259138ae4c1a1b2b771400d46e0e54cee6e26b0626a20fdcb4b0235b"
+   "path": "skills/vibe-eval/anchors/B2.json",
+   "sha256": "dae2e3895ecaeece9fa5b112e53aaee69913f20c10838700562cf43ac4d74c51"
   },
   {
-   "path": "skills/vibe-eval/learning-hub/security-and-supply-chain/index.html",
-   "sha256": "c2ec93dd7bc56944b87a7a44cf8e318647ce21e71f1da93b30ba8dcc96e06d0e"
+   "path": "skills/vibe-eval/anchors/B3.json",
+   "sha256": "31354832f0b223dd496f50f37cb8f986c714455b2eda2acc70443d8e5ed59082"
   },
   {
-   "path": "skills/vibe-eval/learning-hub/verify-and-quality/index.html",
-   "sha256": "981745d9eea6cc64672a630983420854fb99be42b4cc472672ed6245a9a1c358"
+   "path": "skills/vibe-eval/anchors/B4.json",
+   "sha256": "dca7f98830bedae2325512a8550fca8835bed2335a510a2f0d9c2adf7d33f143"
   },
   {
-   "path": "skills/vibe-eval/rulers/design.json",
-   "sha256": "473e41b762a7e2046dfb54b2d868b3fc4724554e3282d1b6e5ab5e8d764da7dd"
+   "path": "skills/vibe-eval/anchors/B5.json",
+   "sha256": "5ee102fce89328599b8a437f94c195e30700e10cb6c93a862d4c709ad9c7762a"
   },
   {
-   "path": "skills/vibe-eval/rulers/general.json",
-   "sha256": "136fb4b6cda713736883fc65d0b362120ae0e8fbf76c122455935389a3abe29b"
+   "path": "skills/vibe-eval/anchors/B6.json",
+   "sha256": "a347489b2096f3976e047cd49053565f5501ba45e2bb2326a5ddd234ee177969"
   },
   {
-   "path": "skills/vibe-eval/rulers/prd.json",
-   "sha256": "177513b2d757aeab16a71bc70f1abe836704eda490655b25afc0a31f2f077b86"
+   "path": "skills/vibe-eval/anchors/B7.json",
+   "sha256": "3a2f261db4c8924b7446f9456b30945e325dfd06d3f5b973f4d7fa72d0b3c7fd"
   },
   {
-   "path": "skills/vibe-eval/rulers/requirements.json",
-   "sha256": "63b5fef74d3d793f52cb36663d39157ed96f993e7f87f5e926686b92f8e8f641"
+   "path": "skills/vibe-eval/anchors/B8.json",
+   "sha256": "c8ce52b36f5b98343ceca9811caf038105478e266d641bd65177eebcf05f0399"
   },
   {
-   "path": "skills/vibe-eval/rulers/test.json",
-   "sha256": "2952d7abe5266e4b5dd9969e29c7be2641bd555ee14ccd7ed414bedf9ad605bf"
+   "path": "skills/vibe-eval/anchors/B9.json",
+   "sha256": "3d5a7c44a7505b3887584dc6e4a974d49592fc93a58e9e6a425e1265ca112781"
   },
   {
-   "path": "skills/vibe-eval/score_session.py",
-   "sha256": "29c4af919933719bcd0171aec2f8993de913e95c584d172fe0748c14a5a819bb"
+   "path": "skills/vibe-eval/anchors/C1.json",
+   "sha256": "33982e8dac80253cef19eb0be363baaad60407858f406e1f9863c61db4e24c5e"
   },
   {
-   "path": "skills/vibe-eval/upload_report.py",
-   "sha256": "6e99e7fa8c24fa1c2bb45f7acf20109d90b5ea66cc5d99337290a2cfb3757082"
+   "path": "skills/vibe-eval/anchors/C2.json",
+   "sha256": "31a3037d7011000805ceffa73b4f008ccdb4cebff0c6dded2d73464fb4d568c1"
+  },
+  {
+   "path": "skills/vibe-eval/anchors/C3.json",
+   "sha256": "bd5971ffd86ca68b4fb132230630b36791e0d5eef7dbd7507b33c752401912ca"
+  },
+  {
+   "path": "skills/vibe-eval/anchors/C4.json",
+   "sha256": "54acce3c7bbedaafd85e87e99064e79b70222aa99042d5bcd615f6a99b6496ee"
+  },
+  {
+   "path": "skills/vibe-eval/anchors/C5.json",
+   "sha256": "fe12f9b47f8aefae396a094600c790597821de5d8efb3363f60619bb549f9ad6"
+  },
+  {
+   "path": "skills/vibe-eval/anchors/D1.json",
+   "sha256": "f631151dd161f93de1427ab22c17ec8977ca1d2b42e8cf317c7fdf5199fe303a"
+  },
+  {
+   "path": "skills/vibe-eval/anchors/D2.json",
+   "sha256": "980f68c4a6e1de111decc79b24fd52ede4c7ef77f52e2abb32baa90f1c45cd47"
+  },
+  {
+   "path": "skills/vibe-eval/anchors/D3.json",
+   "sha256": "a457802e4d44f91a4b2a375d8c629c57dcc3256cb983413cb7d4544bc87ac37d"
+  },
+  {
+   "path": "skills/vibe-eval/anchors/D4.json",
+   "sha256": "42ce92fae48829fbd60298a211677834dc233c01290bd7ef6e2dc0a2e753cf58"
+  },
+  {
+   "path": "skills/vibe-eval/anchors/D5.json",
+   "sha256": "85fb3872ffa0f8a7253f73d2b9b634e52d35c3199fabf4704dbf96007fea15a0"
+  },
+  {
+   "path": "skills/vibe-eval/anchors/_prompt.md",
+   "sha256": "443c298b7d33fa16816365071b38b2de5a0573f9d80d9fdaea5c69d61d674d64"
+  },
+  {
+   "path": "skills/vibe-eval/bin/vibe-eval.js",
+   "sha256": "08cfc8d24f8434d5b01a80f64a7a97fafd8c72393af57dbc88a3abe9a82d297f"
+  },
+  {
+   "path": "skills/vibe-eval/manifest.json",
+   "sha256": "c3e5bc14d2af156550de7215403539d0ec56ae2eacc79a2bf646a742f8e8cd61"
   }
  ],
- "release_version": "0.4.4"
+ "release_version": "1.0.0"
 }
