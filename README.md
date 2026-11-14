@@ -5,7 +5,7 @@ vibe-eval 的两个 skill 公开分发仓,供 [skills CLI](https://github.com/ve
 ## 安装
 
 ```bash
-# 会话评分(评人):对 Claude Code 会话转录打分,L1–L4 四层 + 26 能力域中文评分卡
+# 会话评分(评人):对七个 AI 编程助手的会话转录打分,L1–L4 四层 + 26 能力域中文评分卡
 npx -y skills add Ant-Intelligence/public-skills --skill vibe-eval -g
 
 # 项目评估(评项目):评估项目能否支撑「下一个不了解项目的 AI」接手开发
@@ -75,11 +75,32 @@ npx -y skills remove vibe-eval -g      # 卸载(project-eval 同理)
 类型),命令文字里出现框架名不再算调用。检测项和量表没变。1.0.0 的报告和 1.0.1 的报告不能直接
 比较。装过 1.0.0 的,跑 `npx -y skills update vibe-eval -g` 更新,再重新评一次。
 
+## vibe-eval 1.1.0
+
+1.1.0 加了六个来源助手。现在能读这七家的会话记录:Claude Code、Kimi Code、Pi、
+DeepSeek harness、CodeBuddy、Trae(TRAE CLI)、Qoder。每家一个读取器,把记录翻成
+同一套事件,后面的取证、判定、出报告都不变。编辑器版(IDE)的聊天记录这次不做。
+
+新增两条命令:
+
+- `agents`:认出你现在在哪个助手里跑,列出本机每家有几个项目、几个会话,推荐评哪个。
+- `current`:认出助手,再到那家的记录目录里找出你正在用的那个会话,给出文件路径。
+
+`SKILL.md` 第 0 步改成先跑 `current`。认出的助手和会话会先告诉你,你点头才继续。
+用 `--agent <id>` 可以指定读哪家的记录;不写时按 Claude Code 读,1.0.x 的用法照旧。
+
+口径 9 → 10:判定者看到的东西变了(工具名已翻成 Claude Code 的叫法,证据包多了
+`source_agent`)。量表文字与 149 条检测项一个字都没改。1.0.x 的报告和 1.1.0 的
+报告不能直接比较。装过的跑 `npx -y skills update vibe-eval -g` 更新。
+
+Trae 的读取器标「试用」:按 TRAE CLI 程序里的字段名写的,还没对着真实记录核对过。
+拿到真实记录核对之前,别拿 Trae 的分数定级。
+
 ## 版本与复核
 
 本仓 tag(`vX.Y.Z`)与根目录 `manifest.json` 的 `release_version` 一致;
 `manifest.json` 记录每个文件的 SHA-256,可逐文件复核镜像内容。1.0.0 起两个
-skill 的版本号分开:vibe-eval 是 1.0.1,project-eval 仍是 0.4.4(本次未改动)。CI 每次推送在 Ubuntu 与 Windows 上自动做六 agent id 的安装冒烟
+skill 的版本号分开:vibe-eval 是 1.1.0,project-eval 仍是 0.4.4(本次未改动)。CI 每次推送在 Ubuntu 与 Windows 上自动做六 agent id 的安装冒烟
 (五家 + OpenCode)。
 
 ## 平台验证面(如实)

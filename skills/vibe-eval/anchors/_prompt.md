@@ -8,6 +8,16 @@
 2. 26 份量表 `anchors/<域代码>.json`。每份有六节:五档锚点(0 / 25 / 50 / 75 / 100)、该域的检测项 `items`、与相邻域的分界 `boundaries`、不算证据 `not_evidence`、证据不足怎么办 `insufficient`、以及这个域要回答的问题 `question`。
 3. 本文件。
 
+## 来源助手与工具名
+
+证据包的 `subject.source_agent` 写记录来自哪个助手:`claude-code`、`kimi-code`、`pi`、`dsh`、`codebuddy`、`trae`、`qoder`。
+
+读取器已经把各家的工具名翻成 Claude Code 的叫法。所以你看到的 `Bash`、`Edit`、`Write`、`Read`、`Task`、`Skill`、`AskUserQuestion`,对应的可能是别家的工具。原名写在 `tool_raw` 里,你想核对时可以看。
+
+- 先看 `tool_raw`,再判「用的是不是合适的工具」这类检测项。
+- **这个助手根本没有那个工具时,对应检测项判 `unobserved`(无法观察),不判 `miss`。** 例如 Pi 没有提问工具,「主动用提问工具澄清需求」这一条就是无法观察,不是没做。
+- 记录里没有的字段(例如 Kimi Code、Pi、dsh 都不记 git 分支)显示为空。空不等于没做,按 `unobserved` 处理。
+
 ## 证据包里几个字段的意思
 
 - `user_msg` 是人发的消息。`promptSource` 写来源:`typed` 是键盘输入,`queued` 是助手忙时排队发出的,`slash` 是斜杠命令,`paste` 是粘贴。压缩摘要、后台任务通知、本地命令输出不算人发的消息,不进 `user_msg`。
@@ -91,7 +101,9 @@
 { "host": "claude-code", "model": "<你所在宿主上报的模型名>", "model_confidence": "reported | inferred | unknown", "judged_at": "<ISO-8601 时刻>" }
 ```
 
-`host` 只能取 `claude-code` / `codex` / `cursor` / `zcode` / `trae` / `trae-cn` / `unknown`。你不知道自己的模型名就写 `unknown`、`model_confidence` 写 `unknown`,不要编。
+`host` 只能取 `claude-code` / `codex` / `cursor` / `zcode` / `trae` / `trae-cn` / `kimi-code` / `pi` / `dsh` / `codebuddy` / `qoder` / `unknown`。你不知道自己的模型名就写 `unknown`、`model_confidence` 写 `unknown`,不要编。
+
+`host` 是**判定宿主**,也就是你现在在哪个助手里跑。它和记录来源是两件事,可以不同。你在 Claude Code 里评 Kimi Code 的记录,`host` 写 `claude-code`,`source_agent` 仍是 `kimi-code`。
 
 ## 输出
 
@@ -100,7 +112,7 @@
 ```json
 {
   "schema": "judgment/1",
-  "rules_version": "9",
+  "rules_version": "10",
   "anchor_scale_version": "2",
   "evidence_sha256": "<证据包文件内容的 sha256>",
   "judge": { "host": "claude-code", "model": "...", "model_confidence": "reported", "judged_at": "2026-11-12T09:00:00Z" },
