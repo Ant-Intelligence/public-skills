@@ -44,11 +44,11 @@ npx -y skills remove vibe-eval -g      # 卸载(project-eval 同理)
   不再需要 Python。project-eval 仍是纯标准库 Python 脚本,需要 **Python 3.9+**:
   Ubuntu / macOS 用 `python3`;Windows 用 `py -3`(回退 `python`),路径加引号,
   并加 `-X utf8` 防中文乱码。
-- **数据源边界:vibe-eval 只认 Claude Code 转录**(`~/.claude/projects/**/*.jsonl`;
-  Windows 为 `%USERPROFILE%\.claude\projects\**\*.jsonl`)。装进 Codex / Cursor /
-  ZCode / Trae 后 skill 能运行,但这些 agent 自己的会话转录不支持;没有 Claude
-  Code 转录数据时会如实列空、打不了分。project-eval 评本地项目目录,任意 agent
-  下语义一致。
+- **数据源边界**:vibe-eval 1.1.0 起读七个助手命令行版的会话记录:Claude Code、
+  Kimi Code、Pi、DeepSeek harness(`dsh`)、CodeBuddy、Trae、Qoder。编辑器版的
+  聊天记录读不了。Codex / Cursor / ZCode 里也能跑这个 skill,但它们自己的会话记录
+  不支持;本机没有这七家的记录时会如实列空、打不了分。project-eval 评本地项目
+  目录,任意 agent 下语义一致。
 - **数据交底(如实,不夸大)**:评分默认仅本地、零出网;上云是 opt-in——
   - project-eval 整包轨(`--upload`):上送最终报告与脱敏统计,密钥命中即拒传、
     零原文;链接只绑认领账号;
@@ -88,6 +88,7 @@ DeepSeek harness、CodeBuddy、Trae(TRAE CLI)、Qoder。每家一个读取器,�
 
 `SKILL.md` 第 0 步改成先跑 `current`。认出的助手和会话会先告诉你,你点头才继续。
 用 `--agent <id>` 可以指定读哪家的记录;不写时按 Claude Code 读,1.0.x 的用法照旧。
+1.1.1 起改成自动认来源,`--agent` 一般不用写。见下一节。
 
 口径 9 → 10:判定者看到的东西变了(工具名已翻成 Claude Code 的叫法,证据包多了
 `source_agent`)。量表文字与 149 条检测项一个字都没改。1.0.x 的报告和 1.1.0 的
@@ -96,11 +97,32 @@ DeepSeek harness、CodeBuddy、Trae(TRAE CLI)、Qoder。每家一个读取器,�
 Trae 的读取器标「试用」:按 TRAE CLI 程序里的字段名写的,还没对着真实记录核对过。
 拿到真实记录核对之前,别拿 Trae 的分数定级。
 
+## vibe-eval 1.1.1
+
+这一版做两件事:默认评当前项目的全部会话;把用七家助手时要你操心的事,交给引擎自己做。不用读文档、不用加参数、不用装东西。
+
+- **评这个项目的全部会话。** 一个项目常有好几个会话,只看一个会漏掉你在别的会话里的做法。跑 skill 时,引擎认出你在用哪个助手,找出当前项目在这个助手里的全部会话,一起评。开评前告诉你会话数和要读几份项目文档;不想读文档,说一声就行。
+- **不用回答「你现在用哪个助手」。** 认不出时,引擎自己把七家都找一遍。只有一家有这个项目的记录,直接评那家。几家都有、又认不出你正在用哪家,才列出来让你选。
+- **不用写 `--agent`。** `evidence`、`score`、`coll` 按你给的文件、记录目录或项目目录认出是哪家的记录。认不出才按 Claude Code 读。
+- **`coll-list` 七家都列。** 想评别的项目时用它,每个项目下面给好「评这个项目」的命令。
+- **不用装 zstd。** dsh 的会话记录是 zstd 压缩的。引擎自己依次试 Node 自带解压、`zstd`、`unzstd`、`zstdcat`,哪个能用用哪个。全都不成才提示一句。
+- `doctor` 多打一行「解压 dsh 记录 可用(…)」,装完就能看出这台机器行不行。
+
+口径仍是 10。证据包字段和判定者看到的东西都没变,1.1.1 的分数可以和 1.1.0 直接比较。
+
+装 Pi 和 DeepSeek harness 的用一条命令:
+
+```bash
+npx -y skills add Ant-Intelligence/public-skills --skill vibe-eval -g -a pi -a kimi-code-cli
+```
+
+`-a pi` 放到 `~/.pi/agent/skills/`,`-a kimi-code-cli` 放到 `~/.agents/skills/`(dsh 读这里)。
+
 ## 版本与复核
 
 本仓 tag(`vX.Y.Z`)与根目录 `manifest.json` 的 `release_version` 一致;
 `manifest.json` 记录每个文件的 SHA-256,可逐文件复核镜像内容。1.0.0 起两个
-skill 的版本号分开:vibe-eval 是 1.1.0,project-eval 仍是 0.4.4(本次未改动)。CI 每次推送在 Ubuntu 与 Windows 上自动做六 agent id 的安装冒烟
+skill 的版本号分开:vibe-eval 是 1.1.1,project-eval 仍是 0.4.4(本次未改动)。CI 每次推送在 Ubuntu 与 Windows 上自动做六 agent id 的安装冒烟
 (五家 + OpenCode)。
 
 ## 平台验证面(如实)

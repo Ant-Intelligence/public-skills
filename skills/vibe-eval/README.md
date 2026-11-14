@@ -36,13 +36,16 @@ npx -y skills add Ant-Intelligence/public-skills --skill vibe-eval -g
 
 装进几个助手时,`skills` 把文件放在 `~/.agents/skills/vibe-eval/` 一份,其他助手的目录是指向它的软链接。
 
-**DeepSeek harness(`dsh`)没有安装项。** `skills` 认不出它,所以 `-a` 里也没有它。dsh 会读 `~/.agents/skills/`,装到那里即可:
+**同时用 Pi 和 DeepSeek harness(`dsh`)时,装一条命令就够:**
 
 ```bash
-npx -y skills add Ant-Intelligence/public-skills --skill vibe-eval -g -a kimi-code-cli
+npx -y skills add Ant-Intelligence/public-skills --skill vibe-eval -g -a pi -a kimi-code-cli
 ```
 
-上面这条只是把文件放进 `~/.agents/skills/`。装好之后 dsh 就能用了。也可以手动把 `public-skills/skills/vibe-eval/` 整个目录拷到 `~/.agents/skills/vibe-eval/`。
+- `-a pi` 放到 `~/.pi/agent/skills/vibe-eval/`,Pi 读这里。
+- `-a kimi-code-cli` 放到 `~/.agents/skills/vibe-eval/`。dsh 读这个目录,`skills` 没有单给 dsh 的安装项。
+
+两个目录都放好了,两家就都能用。装完重启助手。
 
 ## 更新、查看、卸载
 
@@ -64,7 +67,9 @@ npx -y skills remove vibe-eval -g   # 卸载
 
 在助手里说「用 vibe-eval 评一下」。Claude Code 里也可以输入 `/vibe-eval`。
 
-主流程五步:选来源助手 → 选项目 → 取证 → 判定 → 出报告。判定由助手在对话里完成,引擎不调模型。
+主流程四步:找到当前项目的全部会话 → 取证 → 判定 → 出报告。助手和项目都由引擎自己认,用户不用选。判定由助手在对话里完成,引擎不调模型。
+
+一个项目常有好几个会话。默认把这个项目在这家助手里的会话全部评,不是只评一个。
 
 报告写到 `./vibe-eval-reports/`,有 `.md` 与 `.html` 两份。HTML 带证据抽屉,能看到每个域的判分依据。
 
@@ -96,7 +101,7 @@ npx -y skills add ./public-skills --skill vibe-eval -g
 
 ## 数据源
 
-可以读七家助手的会话记录。用哪个,由 `--agent` 定。
+可以读七家助手的会话记录。读哪一家,引擎自己认:按环境变量认出你在哪个助手里跑,再按文件路径认记录属于谁。用户不用选。
 
 | 助手 | `--agent` 值 | 记录在哪 |
 |---|---|---|
@@ -108,36 +113,32 @@ npx -y skills add ./public-skills --skill vibe-eval -g
 | Trae | `trae` | `~/.cache/coco/`(Linux),环境变量 `XDG_CACHE_HOME` 可改 |
 | Qoder | `qoder` | `~/.qoder/`、`~/.qoder-cn/` |
 
-不写 `--agent` 时按 `claude-code` 读,和 1.0.x 一样。
+`--agent` 不用自己写。`current` 和 `coll-list` 打出来的命令里已经带好了。不写时引擎按路径自动认:路径在哪家的记录目录底下,就是哪家;给的是项目目录,就看哪家有这个项目的记录。
 
 Claude Code 的多账号用逗号分隔。Windows 上 Claude Code 的记录在 `%USERPROFILE%\.claude\projects\`。WSL 读 Windows 侧用 `CLAUDE_CONFIG_DIR=/mnt/c/Users/<用户名>/.claude`。
 
-**不知道评哪个会话,先跑 `current`:**
+**想先看看会评什么,跑 `current`:**
 
 ```bash
 node ~/.claude/skills/vibe-eval/bin/vibe-eval.js current
 ```
 
-它认出你现在在哪个助手里跑,再到那家的记录目录里找出你正在用的那个会话。输出四行:
+它认出你在哪个助手里跑,再找出当前项目在这家的全部会话。输出像这样:
 
 ```
-当前助手 Claude Code
-当前会话 /home/alice/.claude/projects/-home-alice-shop/3f2a1c9e-....jsonl
-挑法 会话编号(CLAUDE_CODE_SESSION_ID)
+当前助手 Pi
+认法 正在用的助手(按环境变量认出)
 项目 /home/alice/shop
-下一步 evidence /home/alice/.claude/projects/-home-alice-shop/3f2a1c9e-....jsonl
+会话 12 个,全部评
+另有 1 家助手也有这个项目的记录(最近用过的排前面):
+  DeepSeek harness · 3 个会话 → evidence "/home/alice/shop" --agent dsh
+下一步 evidence "/home/alice/shop" --agent pi
 ```
 
-看不到你要的会话,或者你想评别的项目,再跑:
-
-```bash
-node ~/.claude/skills/vibe-eval/bin/vibe-eval.js agents
-```
-
-它列出每个助手有几个项目、几个会话、最近一次是哪天,并标出推荐评哪一个。
+想评别的项目,跑 `coll-list`。它把七家的项目都列出来,每个项目下面写好了评它的命令。
 
 **Trae 的记录格式还没对着真实记录核对过。** 读取器按 TRAE CLI 程序里的字段名写。报告里 Trae 后面标「试用」,报告里也会写明这一点。拿到真实记录核对之前,别拿 Trae 的分数定级。
 
 **DeepSeek harness 的插件 `dsh-session-log-deepseek` 会把会话记录上传到 DeepSeek。** 那是 dsh 自己的行为,和本 skill 无关。本 skill 只读本地文件。
 
-版本 1.1.0 · 口径 10 · 量表 v2
+版本 1.1.1 · 口径 10 · 量表 v2
