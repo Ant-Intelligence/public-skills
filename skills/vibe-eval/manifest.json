@@ -1,14 +1,14 @@
 {
   "name": "vibe-eval",
-  "version": "1.1.2",
-  "rules_version": "10",
+  "version": "1.1.3",
+  "rules_version": "11",
   "anchor_scale_version": "2",
   "summary_schema": "1",
   "built_at": "unpinned",
   "files": [
     {
       "path": "README.md",
-      "sha256": "60053b5f5ca54537f0c39d1e2291b8fe58d7a4538bfa165e961f37d064f44dae",
+      "sha256": "c6a5f467bb0ceeeff487a05c731f784c22d59744e4aedb251d7042d9e849901c",
       "bytes": 8454
     },
     {
@@ -148,14 +148,14 @@
     },
     {
       "path": "anchors/_prompt.md",
-      "sha256": "05b8e0995c3cd12433a20438e586ba20c850005007e01292762236dc75857260",
+      "sha256": "b44306248383db7ddc4850d675a1f07b4551ee829b33350a3df0f8a58b75e746",
       "bytes": 9429
     },
     {
       "path": "bin/vibe-eval.js",
-      "sha256": "a8ce7c74c1357670f1ff12280302a32e627b1b5d50cd7126f5acc2dd6ee2561b",
-      "bytes": 156763
+      "sha256": "cf19168e8a4d931bb5bf32a242ad12382f8fc7398f33784a2a70593d6a64d8f8",
+      "bytes": 157306
     }
   ],
-  "manifest_sha256": "94cbcd7d4df186bd695e0dfae6c1413cb49e12247579474881695e141cd234f9"
+  "manifest_sha256": "83dcca3d33676e7510549de7a0ca717301c5e9616558ab23488cc17a9a541b6b"
 }

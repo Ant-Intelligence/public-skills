@@ -55,6 +55,20 @@ npx -y skills remove vibe-eval -g      # 卸载(project-eval 同理)
   安装统计(装了哪个仓、哪个 skill、哪些 agent)。这不是本仓的行为。不想发,
   先设 `DISABLE_TELEMETRY=1` 再装。
 
+## vibe-eval 1.1.3
+
+1.1.3 改了算分。**口径 10 → 11,分数不可直接比较**:1.1.2 及更早的报告和 1.1.3 的报告不能直接比,要看分数变化,用 1.1.3 重跑一遍。
+
+- 基础分满分 100 分,只由三层算:L1 基础分 40 分、L2 基础分 40 分、L4 基础分 20 分。
+- L3 改成加分项,最多加 10 分。过了资格闸门才计分,L3 层分乘 0.1 加进总分。没过闸门就加 0 分。
+- 总分满分 110 分。报告第 2 行写 `Tier X - n.n / 110`。
+- 段位按含加分的总分判,门槛不变:S ≥ 90 / A ≥ 80 / B ≥ 70 / C ≥ 60,低于 60 为 D。
+- 报告的层表写分值,不写百分比:表头是「分值」,四行写「基础分 40 分」「基础分 40 分」「加分 10 分」「基础分 20 分」。
+
+26 份量表一个字没改。更新:再跑一次 `npx -y github:Ant-Intelligence/public-skills`。已装的落点会先勾上,直接回车。
+
+已知问题:报告服务端还只认 0–100 的总分。总分超过 100 的报告上传后,项目页的总分一栏是空的。报告全文照常上传。
+
 ## vibe-eval 1.1.2
 
 1.1.2 加了安装器:`npx -y github:Ant-Intelligence/public-skills` 打开勾选列表,只列我们支持的 9 个落点,勾完把文件直接拷到对应目录。给 DeepSeek harness(`dsh`)装改用 `-a universal`。引擎没改,评审口径仍是 10,分数可以和 1.1.1 直接比较。
@@ -140,7 +154,7 @@ npx -y skills add Ant-Intelligence/public-skills --skill vibe-eval -g -a pi -a u
 
 本仓 tag(`vX.Y.Z`)与根目录 `manifest.json` 的 `release_version` 一致;
 `manifest.json` 记录每个文件的 SHA-256,可逐文件复核镜像内容。1.0.0 起两个
-skill 的版本号分开:vibe-eval 是 1.1.2,project-eval 仍是 0.4.4(本次未改动)。CI 每次推送在 Ubuntu 与 Windows 上自动做六 agent id 的安装冒烟
+skill 的版本号分开:vibe-eval 是 1.1.3,project-eval 仍是 0.4.4(本次未改动)。CI 每次推送在 Ubuntu 与 Windows 上自动做六 agent id 的安装冒烟
 (五家 + OpenCode)。
 
 ## 平台验证面(如实)

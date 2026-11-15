@@ -112,7 +112,7 @@
 ```json
 {
   "schema": "judgment/1",
-  "rules_version": "10",
+  "rules_version": "11",
   "anchor_scale_version": "2",
   "evidence_sha256": "<证据包文件内容的 sha256>",
   "judge": { "host": "claude-code", "model": "...", "model_confidence": "reported", "judged_at": "2026-11-12T09:00:00Z" },
