@@ -1,34 +1,30 @@
 # Ant-Intelligence Skills(Agent Skills 公开分发仓)
 
-vibe-eval 的两个 skill 公开分发仓,供 [skills CLI](https://github.com/vercel-labs/skills)(`npx skills`)一键安装。
+Ant-Intelligence 的 skills 公开分发仓。vibe-eval 自带安装器(`npx -y github:Ant-Intelligence/public-skills`),只列我们支持的 AI 编程助手;也可以用 [skills CLI](https://github.com/vercel-labs/skills)(`npx skills`)安装。
 
 ## 安装
 
-```bash
-# 会话评分(评人):对七个 AI 编程助手的会话转录打分,L1–L4 四层 + 26 能力域中文评分卡
-npx -y skills add Ant-Intelligence/public-skills --skill vibe-eval -g
+vibe-eval(会话评分,评人):一条命令,出现勾选列表,勾你要装到哪几个 AI 编程助手,回车。
 
-# 项目评估(评项目):评估项目能否支撑「下一个不了解项目的 AI」接手开发
+```bash
+npx -y github:Ant-Intelligence/public-skills
+```
+
+列表里只有我们支持的 9 个落点:Claude Code、Codex / Cursor / Kimi Code / DeepSeek harness、ZCode、Trae、Trae 国内版、Pi、CodeBuddy、Qoder、Qoder 国内版。本机已经装过的那几行会先勾上。零依赖,Node 18 以上可用。装之前逐份核对 sha256,对不上就整份不装。
+
+- 空格 勾选 / 取消,↑↓ 移动,a 全选,回车安装,q 退出。
+- `-p` 装到当前项目;`-a claude-code,pi` 不开列表直接装;`-l` 只列落点。
+- 往每个勾选的目录各拷一份完整文件,不建软链接,Windows 上不用额外加参数。
+
+项目评估(评项目)仍用 `skills` 安装:
+
+```bash
 npx -y skills add Ant-Intelligence/public-skills --skill project-eval -g
 ```
 
-`-g` 装到用户级(所有项目可用);去掉 `-g` 装当前项目。CLI 会自动识别本机
-已装的 agent(Claude Code / Codex / Cursor / ZCode / Trae / OpenCode 等)并提示;
-也可显式指定:`-a claude-code -a codex -a cursor -a zcode -a trae`,`-y` 免交互确认。
-Windows 建议加 `--copy`,绕开 junction / 权限问题。
+`skills` 是 [skills CLI](https://github.com/vercel-labs/skills)。vibe-eval 也可以用它装(`npx -y skills add Ant-Intelligence/public-skills --skill vibe-eval -g`),效果一样;区别是它的勾选列表是它自己写死的,有 50 多个助手,不是只列我们支持的这几家。
 
-用户级落点(skills CLI 实测):
-
-| Agent | Ubuntu / macOS | Windows |
-|---|---|---|
-| Claude Code | `~/.claude/skills/` | `%USERPROFILE%\.claude\skills\` |
-| Codex | `~/.agents/skills/` | `%USERPROFILE%\.agents\skills\` |
-| Cursor | `~/.agents/skills/`(也读 `~/.cursor/skills/`) | `%USERPROFILE%\.agents\skills\` |
-| ZCode | `~/.zcode/skills/` | `%USERPROFILE%\.zcode\skills\` |
-| Trae | `~/.trae/skills/` | `%USERPROFILE%\.trae\skills\` |
-
-Trae CN 用 `~/.trae-cn/skills/`(`-a trae-cn`)。Cursor Cloud Agents 只同步
-`~/.cursor/skills/`,要用云端 Cursor 需另外放一份到该目录。
+`-g` 装到用户级(所有项目可用);去掉 `-g` 装当前项目。Windows 建议加 `--copy`。
 
 ## 更新 / 卸载
 
@@ -58,6 +54,10 @@ npx -y skills remove vibe-eval -g      # 卸载(project-eval 同理)
 - **skills CLI 的安装统计**:`npx skills add` 默认向 skills CLI 的作者发一次匿名
   安装统计(装了哪个仓、哪个 skill、哪些 agent)。这不是本仓的行为。不想发,
   先设 `DISABLE_TELEMETRY=1` 再装。
+
+## vibe-eval 1.1.2
+
+1.1.2 加了安装器:`npx -y github:Ant-Intelligence/public-skills` 打开勾选列表,只列我们支持的 9 个落点,勾完把文件直接拷到对应目录。给 DeepSeek harness(`dsh`)装改用 `-a universal`。引擎没改,评审口径仍是 10,分数可以和 1.1.1 直接比较。
 
 ## vibe-eval 1.0.0 替换 0.4.4
 
@@ -110,19 +110,37 @@ Trae 的读取器标「试用」:按 TRAE CLI 程序里的字段名写的,还没
 
 口径仍是 10。证据包字段和判定者看到的东西都没变,1.1.1 的分数可以和 1.1.0 直接比较。
 
-装 Pi 和 DeepSeek harness 的用一条命令:
+给 DeepSeek harness 装的命令 1.1.2 起改了,见下一节。
+
+## vibe-eval 1.1.2
+
+这一版只改给 DeepSeek harness(`dsh`)装 skill 的命令。引擎没变,口径仍是 10,1.1.2 的分数可以和 1.1.1 直接比较。
+
+**只用 dsh 的机器,不要用不带 `-a` 的安装命令。** `skills` 不认识 dsh。它找不到认识的助手时,会往 50 多个助手的目录各放一份。
+
+`skills` 没有 `-a dsh` 这一项,写了会报 `Invalid agents: dsh`。给 dsh 装用 `-a universal`。`universal` 是 `skills` 的一个安装项,它只把文件放进公用目录 `~/.agents/skills/vibe-eval/`。dsh 读这个目录。
+
+只用 dsh:
 
 ```bash
-npx -y skills add Ant-Intelligence/public-skills --skill vibe-eval -g -a pi -a kimi-code-cli
+npx -y skills add Ant-Intelligence/public-skills --skill vibe-eval -g -a universal
 ```
 
-`-a pi` 放到 `~/.pi/agent/skills/`,`-a kimi-code-cli` 放到 `~/.agents/skills/`(dsh 读这里)。
+同时用 Pi 和 dsh:
+
+```bash
+npx -y skills add Ant-Intelligence/public-skills --skill vibe-eval -g -a pi -a universal
+```
+
+`-a pi` 放到 `~/.pi/agent/skills/`,Pi 读这里。`-a universal` 放到 `~/.agents/skills/`,dsh 读这里。
+
+1.1.1 写的是 `-a kimi-code-cli`。它的落点也是 `~/.agents/skills/`,已经这样装好的不用重装。
 
 ## 版本与复核
 
 本仓 tag(`vX.Y.Z`)与根目录 `manifest.json` 的 `release_version` 一致;
 `manifest.json` 记录每个文件的 SHA-256,可逐文件复核镜像内容。1.0.0 起两个
-skill 的版本号分开:vibe-eval 是 1.1.1,project-eval 仍是 0.4.4(本次未改动)。CI 每次推送在 Ubuntu 与 Windows 上自动做六 agent id 的安装冒烟
+skill 的版本号分开:vibe-eval 是 1.1.2,project-eval 仍是 0.4.4(本次未改动)。CI 每次推送在 Ubuntu 与 Windows 上自动做六 agent id 的安装冒烟
 (五家 + OpenCode)。
 
 ## 平台验证面(如实)

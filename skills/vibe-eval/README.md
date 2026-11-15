@@ -4,18 +4,29 @@
 
 ## 安装
 
+一条命令,出现勾选列表,勾你要装到哪几个助手,回车:
+
+```bash
+npx -y github:Ant-Intelligence/public-skills
+```
+
+列表里只有我们支持的助手,一共 9 行:Claude Code、Codex / Cursor / Kimi Code / DeepSeek harness、ZCode、Trae、Trae 国内版、Pi、CodeBuddy、Qoder、Qoder 国内版。本机已经装过的那几行会先勾上。
+
+- 空格 勾选 / 取消,↑↓ 移动,a 全选,回车安装,q 退出。
+- 默认装到用户目录,所有项目都能用。加 `-p` 装到当前项目。
+- 不想开列表:`npx -y github:Ant-Intelligence/public-skills -a claude-code,pi`。名字见 `-l` 的输出。
+- 装之前会把每份文件和 `manifest.json` 里的 sha256 对一遍。对不上就整份不装,原来的目录保持原样。
+
+也可以用 `skills` 命令装,效果一样:
+
 ```bash
 npx -y skills add Ant-Intelligence/public-skills --skill vibe-eval -g
 ```
 
-`skills` 是一个开源的安装工具(<https://github.com/vercel-labs/skills>),它从 GitHub 仓 `Ant-Intelligence/public-skills` 取文件,装进本机的 AI 编程助手。
+`skills` 是一个开源的安装工具(<https://github.com/vercel-labs/skills>)。它从同一个 GitHub 仓取文件。区别:它的勾选列表是它自己写死的,有 50 多个助手,不是只列我们支持的这几家。
 
-- `-g` 装到用户目录,所有项目都能用。去掉 `-g`,只装到当前项目。
-- 它会自动找本机装了哪些助手。也可以用 `-a` 指定,例如 `-a claude-code -a codex`。
-- `-y` 不再逐项确认。
-- Windows 建议加 `--copy`,直接复制文件,不建链接。
-
-注意:`skills` 安装时默认向它的作者发一次匿名安装统计(装了哪个仓、哪个 skill、哪些助手)。不想发,先设 `DISABLE_TELEMETRY=1` 再装。
+- `-g` 装到用户目录。去掉 `-g`,只装到当前项目。`-y` 不再逐项确认。Windows 建议加 `--copy`。
+- 注意:`skills` 安装时默认向它的作者发一次匿名安装统计。不想发,先设 `DISABLE_TELEMETRY=1` 再装。上面那条 `npx -y github:...` 不发统计。
 
 装完重启助手,在对话里说「用 vibe-eval 评一下」。
 
@@ -28,24 +39,40 @@ npx -y skills add Ant-Intelligence/public-skills --skill vibe-eval -g
 | Cursor | `~/.agents/skills/vibe-eval/` | `<项目>/.agents/skills/vibe-eval/` |
 | Kimi Code(`-a kimi-code-cli`) | `~/.agents/skills/vibe-eval/` | `<项目>/.agents/skills/vibe-eval/` |
 | Pi(`-a pi`) | `~/.pi/agent/skills/vibe-eval/` | `<项目>/.pi/skills/vibe-eval/` |
+| DeepSeek harness(`-a universal`) | `~/.agents/skills/vibe-eval/` | `<项目>/.agents/skills/vibe-eval/` |
 | ZCode | `~/.zcode/skills/vibe-eval/` | `<项目>/.zcode/skills/vibe-eval/` |
 | CodeBuddy(`-a codebuddy`) | `~/.codebuddy/skills/vibe-eval/` | `<项目>/.codebuddy/skills/vibe-eval/` |
 | Qoder(`-a qoder`) | `~/.qoder/skills/vibe-eval/` | `<项目>/.qoder/skills/vibe-eval/` |
 | Trae(`-a trae`) | `~/.trae/skills/vibe-eval/` | `<项目>/.trae/skills/vibe-eval/` |
-| Trae 国内版(`-a trae-cn`) | `~/.trae/skills/vibe-eval/` | `<项目>/.trae/skills/vibe-eval/` |
+| Trae 国内版(`-a trae-cn`) | `~/.trae-cn/skills/vibe-eval/` | `<项目>/.trae/skills/vibe-eval/` |
+| Qoder 国内版(`-a qoder-cn`) | `~/.qoder-cn/skills/vibe-eval/` | `<项目>/.qoder/skills/vibe-eval/` |
 
-装进几个助手时,`skills` 把文件放在 `~/.agents/skills/vibe-eval/` 一份,其他助手的目录是指向它的软链接。
+`npx -y github:Ant-Intelligence/public-skills` 往每个勾选的目录各拷一份完整的文件,不建软链接,所以 Windows 上不用加 `--copy`。
 
-**同时用 Pi 和 DeepSeek harness(`dsh`)时,装一条命令就够:**
+`skills` 装进几个助手时,把文件放在 `~/.agents/skills/vibe-eval/` 一份,其他助手的目录是指向它的软链接。
+
+## 给 DeepSeek harness(`dsh`)装
+
+**只用 dsh 的机器,不要用「安装」一节那条不带 `-a` 的命令。** `skills` 不认识 dsh。它找不到认识的助手时,会往 50 多个助手的目录各放一份。
+
+`skills` 没有 `-a dsh` 这一项,写了会报 `Invalid agents: dsh`。给 dsh 装用 `-a universal`。`universal` 是 `skills` 的一个安装项,它只把文件放进公用目录 `~/.agents/skills/vibe-eval/`。dsh 读这个目录。
+
+只用 dsh:
 
 ```bash
-npx -y skills add Ant-Intelligence/public-skills --skill vibe-eval -g -a pi -a kimi-code-cli
+npx -y skills add Ant-Intelligence/public-skills --skill vibe-eval -g -a universal
+```
+
+同时用 Pi 和 dsh:
+
+```bash
+npx -y skills add Ant-Intelligence/public-skills --skill vibe-eval -g -a pi -a universal
 ```
 
 - `-a pi` 放到 `~/.pi/agent/skills/vibe-eval/`,Pi 读这里。
-- `-a kimi-code-cli` 放到 `~/.agents/skills/vibe-eval/`。dsh 读这个目录,`skills` 没有单给 dsh 的安装项。
+- `-a universal` 放到 `~/.agents/skills/vibe-eval/`,dsh 读这里。
 
-两个目录都放好了,两家就都能用。装完重启助手。
+装完重启助手。
 
 ## 更新、查看、卸载
 
@@ -141,4 +168,4 @@ node ~/.claude/skills/vibe-eval/bin/vibe-eval.js current
 
 **DeepSeek harness 的插件 `dsh-session-log-deepseek` 会把会话记录上传到 DeepSeek。** 那是 dsh 自己的行为,和本 skill 无关。本 skill 只读本地文件。
 
-版本 1.1.1 · 口径 10 · 量表 v2
+版本 1.1.2 · 口径 10 · 量表 v2
