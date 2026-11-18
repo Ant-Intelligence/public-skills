@@ -55,6 +55,21 @@ npx -y skills remove vibe-eval -g      # 卸载(project-eval 同理)
   安装统计(装了哪个仓、哪个 skill、哪些 agent)。这不是本仓的行为。不想发,
   先设 `DISABLE_TELEMETRY=1` 再装。
 
+## vibe-eval 1.1.4
+
+1.1.4 只改了 DeepSeek harness(`dsh`)的记录读法。评分口径仍是 11,其它六家的报告可以和 1.1.3 直接比较。
+
+**1.1.3 及更早版本评出的 dsh 报告不能用。** 那些报告几乎只看了项目文档,没读到会话。要用 1.1.4 重评。
+
+- 一个 zstd 文件里有多个帧,以前只解了第一帧,等于只读到会话开头一行。现在逐帧解,末尾写了一半的帧也照常读到它前面的内容。
+- 项目路径改成先读会话开头的 `cwd`,不再从目录名反推。`nex-router` 不再被推成 `nex/router`。
+- 读取器按 `@deepseek-ai/dsh` 0.2.2-rc.3 的源码重写,并对着一份真实的 v4 记录核对过。人发的话、工具调用与结果、ESC 打断、人拒绝、退出码、压缩、斜杠命令、模型、用量、会话标题都能读到。
+- 子代理的会话并进派出它的主会话。分叉来的会话跳过开头复制的那一段。人拒绝和命令失败分开算。
+- dsh 只写进记录、不进对话的状态(待办、目标、审批问答、权限预设、沙箱模式、计划模式、代理预设、规则文件路径、会话标题来源、是否续接或分叉)现在收进证据包的 `stats.harness`。命令在哪个目录里跑收进 `tool_use.workdir`。
+- 26 份量表一个字没改,量表版本仍是 2。
+
+更新:再跑一次 `npx -y github:Ant-Intelligence/public-skills`。已装的落点会先勾上,直接回车。CI 的 Windows / macOS 路径未实测,遇到问题欢迎开 issue。
+
 ## vibe-eval 1.1.3
 
 1.1.3 改了算分。**口径 10 → 11,分数不可直接比较**:1.1.2 及更早的报告和 1.1.3 的报告不能直接比,要看分数变化,用 1.1.3 重跑一遍。
@@ -154,7 +169,7 @@ npx -y skills add Ant-Intelligence/public-skills --skill vibe-eval -g -a pi -a u
 
 本仓 tag(`vX.Y.Z`)与根目录 `manifest.json` 的 `release_version` 一致;
 `manifest.json` 记录每个文件的 SHA-256,可逐文件复核镜像内容。1.0.0 起两个
-skill 的版本号分开:vibe-eval 是 1.1.3,project-eval 仍是 0.4.4(本次未改动)。CI 每次推送在 Ubuntu 与 Windows 上自动做六 agent id 的安装冒烟
+skill 的版本号分开:vibe-eval 是 1.1.4,project-eval 仍是 0.4.4(本次未改动)。CI 每次推送在 Ubuntu 与 Windows 上自动做六 agent id 的安装冒烟
 (五家 + OpenCode)。
 
 ## 平台验证面(如实)

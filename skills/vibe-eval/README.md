@@ -168,4 +168,4 @@ node ~/.claude/skills/vibe-eval/bin/vibe-eval.js current
 
 **DeepSeek harness 的插件 `dsh-session-log-deepseek` 会把会话记录上传到 DeepSeek。** 那是 dsh 自己的行为,和本 skill 无关。本 skill 只读本地文件。
 
-版本 1.1.3 · 口径 11 · 量表 v2
+版本 1.1.4 · 口径 11 · 量表 v2

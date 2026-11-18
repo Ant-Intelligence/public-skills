@@ -1,14 +1,5 @@
 {
- "release_version": "1.1.3",
  "files": [
-  {
-   "path": "bin/install.mjs",
-   "sha256": "d27dd5ff2e00e2caddb82a1af38e375927990f9fd13d894d171bb5023be89850"
-  },
-  {
-   "path": "package.json",
-   "sha256": "9cd3572de0928cc1a1dd7d322ea402bb0910b0cbfe3d7f8995c7b91e25d5fce6"
-  },
   {
    "path": "skills/project-eval/.project-eval-skill",
    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
@@ -67,7 +58,7 @@
   },
   {
    "path": "skills/vibe-eval/README.md",
-   "sha256": "c6a5f467bb0ceeeff487a05c731f784c22d59744e4aedb251d7042d9e849901c"
+   "sha256": "765687b56dc0dcf6a342cd2d95369ff24e5e6f6f414ced99a0bb2ad640e905b4"
   },
   {
    "path": "skills/vibe-eval/SKILL.md",
@@ -183,11 +174,12 @@
   },
   {
    "path": "skills/vibe-eval/bin/vibe-eval.js",
-   "sha256": "cf19168e8a4d931bb5bf32a242ad12382f8fc7398f33784a2a70593d6a64d8f8"
+   "sha256": "0c403e046ccc296579dc5360970f015454da0faf11b83f6dbf89955134c26a34"
   },
   {
    "path": "skills/vibe-eval/manifest.json",
-   "sha256": "865e451553fb67da37ebbd11e707132213236f9f4f259bd65c38735fb188d9c5"
+   "sha256": "63cb8551abe04557a2c0961790aa6a3f7d3d82828f2ca61380d3fc9bf4e8ae8f"
   }
- ]
+ ],
+ "release_version": "1.1.4"
 }
