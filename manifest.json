@@ -58,7 +58,7 @@
   },
   {
    "path": "skills/vibe-eval/README.md",
-   "sha256": "765687b56dc0dcf6a342cd2d95369ff24e5e6f6f414ced99a0bb2ad640e905b4"
+   "sha256": "a488e38871a6565877a719691530698dd27b01d6660b4831b467d4fe79caf3b1"
   },
   {
    "path": "skills/vibe-eval/SKILL.md",
@@ -170,16 +170,12 @@
   },
   {
    "path": "skills/vibe-eval/anchors/_prompt.md",
-   "sha256": "b44306248383db7ddc4850d675a1f07b4551ee829b33350a3df0f8a58b75e746"
+   "sha256": "5ffe631b6f8d95c3f9361719f8cb99e68e90c57ae4bda31196ab2920e54f2d7d"
   },
   {
    "path": "skills/vibe-eval/bin/vibe-eval.js",
-   "sha256": "0c403e046ccc296579dc5360970f015454da0faf11b83f6dbf89955134c26a34"
-  },
-  {
-   "path": "skills/vibe-eval/manifest.json",
-   "sha256": "63cb8551abe04557a2c0961790aa6a3f7d3d82828f2ca61380d3fc9bf4e8ae8f"
+   "sha256": "073cfc35adab825883e7b4ab2e78767105da6cb25254bcb1b6aadc4883005fe2"
   }
  ],
- "release_version": "1.1.4"
+ "release_version": "1.1.5"
 }
