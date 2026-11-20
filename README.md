@@ -55,6 +55,24 @@ npx -y skills remove vibe-eval -g      # 卸载(project-eval 同理)
   安装统计(装了哪个仓、哪个 skill、哪些 agent)。这不是本仓的行为。不想发,
   先设 `DISABLE_TELEMETRY=1` 再装。
 
+## vibe-eval 1.1.5
+
+1.1.5 改了 L3 闸门怎么数 skill 调用。**口径 11 → 12,分数不可直接比较**:1.1.4 及更早的报告和 1.1.5 的报告不能直接比,要看分数变化,用 1.1.5 重跑一遍。
+
+同一批记录重评后,过闸门的会话会变多,L3 加分可能从 0 变成正分。
+
+- 以前只认已知的 skill 包名(superpowers、bmad、gsd 这类)。名字对不上就一次都不算,自己写或团队自建的 skill 装了也白装。现在反过来:任何一次真的 skill 调用都数。
+- 只有助手自带的命令不算:clear、compact、config、help、init、model、plan、goal、feedback 等。
+- 数三处:斜杠命令的名字、`Skill` / `skill` 工具调用里的技能名、子代理类型(只在名字带已知包名时数)。
+- 过闸门还是两条路:用够 2 次;或用够 1 次,并且仓库里有 skill 包留下的目录。
+- 目录名单补了几项:openspec、agent-os、conductor、.taskmaster、.kiro。原来写的 `.agent-os` 是错的,实际是不带点的 `agent-os`。
+- 报告里加一行「认出的 skill 包」。它只给名字贴标签,不影响闸门。原来的「skill 调用次数」照旧。
+- 26 份量表一个字没改,149 条检测项也没动,量表版本仍是 2。
+
+**区分度未验证。** 这一版没跑 4 项区分度测试。分数先当趋势看,不要直接拿来定级。
+
+更新:再跑一次 `npx -y github:Ant-Intelligence/public-skills`。已装的落点会先勾上,直接回车。
+
 ## vibe-eval 1.1.4
 
 1.1.4 只改了 DeepSeek harness(`dsh`)的记录读法。评分口径仍是 11,其它六家的报告可以和 1.1.3 直接比较。
