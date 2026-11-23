@@ -1,6 +1,6 @@
 {
   "name": "public-skills",
-  "version": "1.1.5",
+  "version": "1.1.7",
   "description": "Ant-Intelligence 的 Agent Skills 公开分发仓。npx 进入 vibe-eval 安装器,只列我们支持的 AI 编程助手。",
   "type": "module",
   "bin": {

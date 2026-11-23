@@ -67,6 +67,7 @@ node "<SKILL_DIR>/bin/vibe-eval.js" evidence "<项目目录绝对路径>" --agen
 3. 每域都要给出 `score` / `band` / `status` / `reason` / `evidence`。
    `reason` 里必须带至少一个证据 ID(`T-`/`D-`/`R-`),且该 ID 在证据包里真有。
    每域还要给出 `items`:该域锚点文件里列出的全部检测项,逐条填 `hit` / `partial` / `miss` / `unobserved`。
+   判成 `partial` 或 `miss` 的检测项,每条再在 `item_notes` 里写一句为什么扣分,带证据 ID。报告的「学习区域」照它写扣分原因。
    26 个域合计 149 条检测项,一条不许漏。先判检测项,再按检测项定档。
 4. 把结果写成 `./vibe-eval-reports/<同名>.judgment.json`。
    `judge.host` 写你所在的宿主:`claude-code` / `codex` / `cursor` / `zcode` / `trae` / `trae-cn` / `kimi-code` / `pi` / `dsh` / `codebuddy` / `qoder`;认不出写 `unknown`。
