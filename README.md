@@ -40,11 +40,11 @@ npx -y skills remove vibe-eval -g      # 卸载(project-eval 同理)
   不再需要 Python。project-eval 仍是纯标准库 Python 脚本,需要 **Python 3.9+**:
   Ubuntu / macOS 用 `python3`;Windows 用 `py -3`(回退 `python`),路径加引号,
   并加 `-X utf8` 防中文乱码。
-- **数据源边界**:vibe-eval 1.1.0 起读七个助手命令行版的会话记录:Claude Code、
-  Kimi Code、Pi、DeepSeek harness(`dsh`)、CodeBuddy、Trae、Qoder。编辑器版的
-  聊天记录读不了。Codex / Cursor / ZCode 里也能跑这个 skill,但它们自己的会话记录
-  不支持;本机没有这七家的记录时会如实列空、打不了分。project-eval 评本地项目
-  目录,任意 agent 下语义一致。
+- **数据源边界**:vibe-eval 1.1.8 起读八个助手命令行版的会话记录:Claude Code、
+  Kimi Code、Pi、DeepSeek harness(`dsh`)、CodeBuddy、Trae、Qoder、Codex。Trae 与
+  Codex 是试用。编辑器版的聊天记录读不了。Cursor / ZCode 里也能跑这个 skill,但它们
+  自己的会话记录不支持;本机没有这八家的记录时会如实列空、打不了分。project-eval
+  评本地项目目录,任意 agent 下语义一致。
 - **数据交底(如实,不夸大)**:评分默认仅本地、零出网;上云是 opt-in——
   - project-eval 整包轨(`--upload`):上送最终报告与脱敏统计,密钥命中即拒传、
     零原文;链接只绑认领账号;
@@ -54,6 +54,20 @@ npx -y skills remove vibe-eval -g      # 卸载(project-eval 同理)
 - **skills CLI 的安装统计**:`npx skills add` 默认向 skills CLI 的作者发一次匿名
   安装统计(装了哪个仓、哪个 skill、哪些 agent)。这不是本仓的行为。不想发,
   先设 `DISABLE_TELEMETRY=1` 再装。
+
+## vibe-eval 1.1.8
+
+这一版把同一个项目在各家助手里的会话合在一起评,并开始读 Codex 的记录。**评分规则从 13 升到 14,分数不能和 1.1.7 直接比较。** 26 份量表一个字没改,量表版本仍是 2。规则号要升,是因为判分的模型看到的东西变了:同一个项目会多读进别家助手的会话,证据里多写了每个会话来自哪家,判分提示词也跟着改了。
+
+- **默认各家一起评。** 同一个项目,你在 Claude Code 里用过,又在 Codex 里用过,现在一份报告把两边的会话一起评。报告的「记录来源」写各家各有几个会话。只想评一家,加 `--agent <名字>`,例如 `--agent codex`。
+- **会话开头记下的项目目录和你给的目录相同,才算这个项目的会话。** 在子目录里开的会话不算,名字相近的目录也不算。比的时候不分大小写;Linux 上也不分,所以只差大小写的两个目录会被当成同一个项目。同一个项目,1.1.8 数出的会话可能比 1.1.7 少,少的是开头目录不同的会话。
+- **新增 Codex(试用)。** 读 `~/.codex/` 下的会话记录;设了 `CODEX_HOME` 就读那里。压缩过的旧记录也读。读法按 Codex 的源码写,还没对着真实记录核对过,所以报告里标「试用」。核对之前,含 Codex 会话的报告不要拿来定级。
+- **合集名带整段路径**,例如 `coll--home-me-app-N6`。两个不同位置、同名的项目,不会再互相覆盖证据文件。只有 Claude Code 记录的项目,合集名和 1.1.7 相同。
+- 可比性那句改成:记录来源(读了哪几家助手的会话)、判定宿主、判定模型、量表版本四样都相同的报告,分数才可以直接比较。
+
+**判分稳不稳,这一版没有重测。** 1.1.7 一节写的测试结果是按评分规则 12 做的,规则 14 还没测。**总分可以当趋势看,域分和档位不要直接拿来定级。**
+
+更新:再跑一次 `npx -y github:Ant-Intelligence/public-skills`。已装的落点会先勾上,直接回车。
 
 ## vibe-eval 1.1.7
 
@@ -203,7 +217,7 @@ npx -y skills add Ant-Intelligence/public-skills --skill vibe-eval -g -a pi -a u
 
 本仓 tag(`vX.Y.Z`)与根目录 `manifest.json` 的 `release_version` 一致;
 `manifest.json` 记录每个文件的 SHA-256,可逐文件复核镜像内容。1.0.0 起两个
-skill 的版本号分开:vibe-eval 是 1.1.7,project-eval 仍是 0.4.4(本次未改动)。CI 每次推送在 Ubuntu 与 Windows 上自动做六 agent id 的安装冒烟
+skill 的版本号分开:vibe-eval 是 1.1.8,project-eval 仍是 0.4.4(本次未改动)。CI 每次推送在 Ubuntu 与 Windows 上自动做六 agent id 的安装冒烟
 (五家 + OpenCode)。
 
 ## 平台验证面(如实)

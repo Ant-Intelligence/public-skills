@@ -128,7 +128,7 @@ npx -y skills add ./public-skills --skill vibe-eval -g
 
 ## 数据源
 
-可以读七家助手的会话记录。读哪一家,引擎自己认:按环境变量认出你在哪个助手里跑,再按文件路径认记录属于谁。用户不用选。
+可以读八家助手的会话记录。默认把**当前项目在八家里的全部会话**合成一份一起评,用户不用选。
 
 | 助手 | `--agent` 值 | 记录在哪 |
 |---|---|---|
@@ -139,8 +139,11 @@ npx -y skills add ./public-skills --skill vibe-eval -g
 | CodeBuddy | `codebuddy` | `~/.codebuddy/`,环境变量 `CODEBUDDY_CONFIG_DIR` 可改 |
 | Trae | `trae` | `~/.cache/coco/`(Linux),环境变量 `XDG_CACHE_HOME` 可改 |
 | Qoder | `qoder` | `~/.qoder/`、`~/.qoder-cn/` |
+| Codex | `codex` | `~/.codex/sessions/`,环境变量 `CODEX_HOME` 可改 |
 
-`--agent` 不用自己写。`current` 和 `coll-list` 打出来的命令里已经带好了。不写时引擎按路径自动认:路径在哪家的记录目录底下,就是哪家;给的是项目目录,就看哪家有这个项目的记录。
+**一个会话算不算这个项目**:看会话开头记下的项目目录。它和给出的目录相同才算,不分大小写。在子目录里开的会话不算,名字相近的目录也不算。
+
+**只想评一家**:命令后面加 `--agent <id>`。不加就是八家一起评。给的是某家记录目录底下的文件或目录时,引擎按路径认出是哪家,只读那一家。
 
 Claude Code 的多账号用逗号分隔。Windows 上 Claude Code 的记录在 `%USERPROFILE%\.claude\projects\`。WSL 读 Windows 侧用 `CLAUDE_CONFIG_DIR=/mnt/c/Users/<用户名>/.claude`。
 
@@ -150,22 +153,22 @@ Claude Code 的多账号用逗号分隔。Windows 上 Claude Code 的记录在 `
 node ~/.claude/skills/vibe-eval/bin/vibe-eval.js current
 ```
 
-它认出你在哪个助手里跑,再找出当前项目在这家的全部会话。输出像这样:
+它到八家的记录里找出当前项目的全部会话。输出像这样:
 
 ```
-当前助手 Pi
-认法 正在用的助手(按环境变量认出)
 项目 /home/alice/shop
-会话 12 个,全部评
-另有 1 家助手也有这个项目的记录(最近用过的排前面):
-  DeepSeek harness · 3 个会话 → evidence "/home/alice/shop" --agent dsh
-下一步 evidence "/home/alice/shop" --agent pi
+会话 15 个,全部评:Pi 12 个 · Codex(试用) 3 个
+正在用的助手 Pi(按环境变量认出)
+项目文档 4 份,取证时一起读;不想读就加 --no-docs
+下一步 evidence "/home/alice/shop"
 ```
 
-想评别的项目,跑 `coll-list`。它把七家的项目都列出来,每个项目下面写好了评它的命令。
+想评别的项目,跑 `coll-list`。它把八家的项目都列出来。同一个项目目录在几家都有记录时只列一行,写各家的会话数,下面写好了评它的命令。
 
-**Trae 的记录格式还没对着真实记录核对过。** 读取器按 TRAE CLI 程序里的字段名写。报告里 Trae 后面标「试用」,报告里也会写明这一点。拿到真实记录核对之前,别拿 Trae 的分数定级。
+**两份报告要比分数,先看「记录来源」是否相同。** 只读一家的报告和读了几家的报告不能直接比。
+
+**Trae 与 Codex 的记录格式还没对着真实记录核对过。** Trae 的读取器按 TRAE CLI 程序里的字段名写;Codex 的读取器按 openai/codex 的源码写,本机没有 Codex 记录可核对。报告里这两家后面标「试用」,报告里也会写明这一点。拿到真实记录核对之前,别拿这两家的分数定级。
 
 **DeepSeek harness 的插件 `dsh-session-log-deepseek` 会把会话记录上传到 DeepSeek。** 那是 dsh 自己的行为,和本 skill 无关。本 skill 只读本地文件。
 
-版本 1.1.7 · 口径 13 · 量表 v2
+版本 1.1.8 · 口径 14 · 量表 v2

@@ -58,11 +58,11 @@
   },
   {
    "path": "skills/vibe-eval/README.md",
-   "sha256": "cda03bf3b47fedcd72e58ff4399e1e1ce2c5462437cd6981c6f766b956bdc993"
+   "sha256": "4936ebbeb6c27b77468c07404b438d81b103025894d000382f2e64d98c659a06"
   },
   {
    "path": "skills/vibe-eval/SKILL.md",
-   "sha256": "64df34a74e26ab0db32104ec0f4a12d6622e18a2af50c6006c02b794d66d0155"
+   "sha256": "d19c6aa29a59c4d6443bbde2846fabcba10cbb8e28634343f326c6533212f2ec"
   },
   {
    "path": "skills/vibe-eval/anchors/A1.json",
@@ -170,12 +170,12 @@
   },
   {
    "path": "skills/vibe-eval/anchors/_prompt.md",
-   "sha256": "47abdb675dd6bfa7e531f94b002a6bbc2fea52929d1228879303999c21f08500"
+   "sha256": "ef2aa883aed396b256e963f302eef2fe1fb562717e59fc9a43f27ac4f3b0f6a3"
   },
   {
    "path": "skills/vibe-eval/bin/vibe-eval.js",
-   "sha256": "6a31dc6fdba9817966011b07291266dd917e351b28f4558a45115f1bce98fa47"
+   "sha256": "0406bf6d5405a33169eb88491b209817977fb6e790e835a0819c6d61934f1789"
   }
  ],
- "release_version": "1.1.7"
+ "release_version": "1.1.8"
 }

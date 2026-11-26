@@ -10,12 +10,17 @@
 
 ## 来源助手与工具名
 
-证据包的 `subject.source_agent` 写记录来自哪个助手:`claude-code`、`kimi-code`、`pi`、`dsh`、`codebuddy`、`trae`、`qoder`。
+一份证据包可能同时有几家助手的会话。可能的助手是 `claude-code`、`kimi-code`、`pi`、`dsh`、`codebuddy`、`trae`、`qoder`、`codex`。三处告诉你哪个会话来自哪家:
+
+- `subject.source_agents` 写有哪几家,每家几个会话。
+- 每个会话的 `stats` 条目写 `source_agent`(哪家)与 `sess`(会话序号)。
+- 每条 `T-` 证据也带 `sess`。拿它对上 `stats` 的 `sess`,就知道这条证据来自哪家。
 
 读取器已经把各家的工具名翻成 Claude Code 的叫法。所以你看到的 `Bash`、`Edit`、`Write`、`Read`、`Task`、`Skill`、`AskUserQuestion`,对应的可能是别家的工具。原名写在 `tool_raw` 里,你想核对时可以看。
 
 - 先看 `tool_raw`,再判「用的是不是合适的工具」这类检测项。
-- **这个助手根本没有那个工具时,对应检测项判 `unobserved`(无法观察),不判 `miss`。** 例如 Pi 没有提问工具,「主动用提问工具澄清需求」这一条就是无法观察,不是没做。
+- **按会话看助手有没有那个工具。** 某个会话来自没有那个工具的助手,这个会话不拿来判这一条。**所有会话都来自没有那个工具的助手时**,这一条判 `unobserved`(无法观察),不判 `miss`。例如 Pi 没有提问工具:只有 Pi 的会话时,「主动用提问工具澄清需求」这一条是无法观察;Pi 和 Claude Code 的会话都有时,看 Claude Code 那几个会话里有没有用。
+- Codex 没有读文件的工具,模型用 `sed`、`cat` 这类命令读文件。这些命令记成 `Bash`。
 - 记录里没有的字段(例如 Kimi Code、Pi、dsh 都不记 git 分支)显示为空。空不等于没做,按 `unobserved` 处理。
 
 ## 证据包里几个字段的意思
@@ -118,7 +123,7 @@
 
 `host` 只能取 `claude-code` / `codex` / `cursor` / `zcode` / `trae` / `trae-cn` / `kimi-code` / `pi` / `dsh` / `codebuddy` / `qoder` / `unknown`。你不知道自己的模型名就写 `unknown`、`model_confidence` 写 `unknown`,不要编。
 
-`host` 是**判定宿主**,也就是你现在在哪个助手里跑。它和记录来源是两件事,可以不同。你在 Claude Code 里评 Kimi Code 的记录,`host` 写 `claude-code`,`source_agent` 仍是 `kimi-code`。
+`host` 是**判定宿主**,也就是你现在在哪个助手里跑。它和记录来源是两件事,可以不同。你在 Claude Code 里评 Kimi Code 的记录,`host` 写 `claude-code`,`source_agents` 里仍是 `kimi-code`。
 
 ## 输出
 
