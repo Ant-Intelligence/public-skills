@@ -62,7 +62,7 @@
   },
   {
    "path": "skills/vibe-eval/SKILL.md",
-   "sha256": "d19c6aa29a59c4d6443bbde2846fabcba10cbb8e28634343f326c6533212f2ec"
+   "sha256": "6f4821872798aa4ec88ff153924298eea4f63acff22df7790f4bdcc7c043dd32"
   },
   {
    "path": "skills/vibe-eval/anchors/A1.json",
@@ -174,8 +174,8 @@
   },
   {
    "path": "skills/vibe-eval/bin/vibe-eval.js",
-   "sha256": "0406bf6d5405a33169eb88491b209817977fb6e790e835a0819c6d61934f1789"
+   "sha256": "a6116810fe723b13440f31280d6396b8efc8e19ad50d3d30df9a1b92ee503e66"
   }
  ],
- "release_version": "1.1.8"
+ "release_version": "1.1.9"
 }
